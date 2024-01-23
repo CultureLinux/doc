@@ -1,0 +1,54 @@
+site_name: CultureLinux
+site_url: https://culturelinux.github.io/doc/
+
+theme: 
+  name: material
+  palette:
+    scheme: slate  
+  #features:
+  #  - navigation.tabs
+  #  - navigation.tabs.sticky
+  #  - navigation.indexes 
+extra:
+  generator: false
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+
+nav:
+  - Home: index.md
+  - Linux: 
+    - 'Environement' : linux/environnement.md
+    - 'History' : linux/history.md
+    - 'Network' : debian/network.md    
+    - 'Nmap' : linux/nmap.md
+    - 'Security' : linux/security.md        
+    - 'Users' : linux/users.md    
+  - Debian: 
+    - 'Packages' : debian/packages.md       
+    #- 'Filesystem' : debian/filesystem.md       
+    - 'Email' : debian/msmtp.md       
+    - 'Network' : debian/network.md
+    - 'Snap' : debian/snap.md     
+    - 'UFW' : debian/ufw.md      
+    - 'NFTables' : debian/nftables.md    
+  - Databases: 
+    - 'MariaDB' : databases/mariadb.md    
+    - 'MongoDB' : databases/mongodb.md   
+    - 'SqlServer' : databases/sqlserver.md
+    - 'InfluxDB' : databases/influxdb.md             
+  - Virtualization:
+    - 'Proxmox' : virtualization/proxmox.md      
+  - 'Infra As Code':
+    - 'Ansible' : iac/ansible.md      
+    - 'OpenToFu' : iac/opentofu.md   
+  - 'Containers':
+    - 'Docker' : containers/docker.md
+  - Git:
+    - 'Gitlab' : git/gitlab.md        
