@@ -1,29 +1,34 @@
-# ansible
-## install
+# Ansible
+
+## Install 
+### pipx
     sudo dnf install pipx
     pipx install --include-deps ansible
     pipx inject --include-apps ansible argcomplete
-## Upgrade
+
+### Upgrade
     pipx upgrade --include-injected ansible
-## Test
+
+### Test
     python3 -m pip -V
     ansible --version
     ansible-community --version
-## Config
+
+### Config
     ansible-config init --disabled -t all > ansible.cfg
 
-# inventory
-## setup
+## inventory
+### setup
     # single host
     bpg-debian12 ansible_host=192.168.1.170 ansible_user=debian
-## test
+### test
     ansible bpg-debian12 -m ping -i inventory
     ansible all -m ping -i inventory
-## envvar
+### envvar
     export ANSIBLE_INVENTORY=inventory
     
-# playbook
-## create test
+## playbook
+### create test
 ```
 ---
 - name : test user
@@ -67,7 +72,7 @@
   - debug:
       var: results.stdout 
 ```
-## create post tofu root
+### create post tofu root
 ```
 ---
 - name: "tofu : setup root key"
@@ -92,29 +97,29 @@
     state: restarted
 ```
 
-## Execute
+### Execute
     ansible-playbook plb_get_user.yml -i inventory
     export ANSIBLE_INVENTORY=inventory
     ansible-playbook plb_get_user.yml
 
 
-# Roles 
-## Create 
-### galaxy
+## Roles 
+### Create 
+#### galaxy
     ansible-galaxy init roles/post_tofu --offline
-### custom
-#### structure
+#### custom
+##### structure
 ```
 mkdir -p roles/post_tofu/tasks
 ```
-#### tasks
-##### main
+##### tasks
+###### main
 
     cat << EOF > roles/post_tofu/tasks/main.yml
     - include_tasks: copy_ssh_key_root.yml
     EOF
 
-##### task sshkey
+###### task sshkey
     cat << EOF > roles/post_tofu/tasks/copy_ssh_key_root.yml
     ---
     - name: copy ssh authozied_keys to root
@@ -133,7 +138,7 @@ mkdir -p roles/post_tofu/tasks
     EOF
 
 
-#### playbook
+##### playbook
 
     cat << EOF > deploy_post_tofu.yml
     ---
@@ -146,16 +151,16 @@ mkdir -p roles/post_tofu/tasks
         - post_tofu
     EOF        
 
-#### run
+##### run
 ```
 ansible-playbook deploy_post_tofu.yml
 ```
-## Nginx 
-### structure
+### Nginx 
+#### structure
 ```
 mkdir -p roles/nginx/{tasks,handlers,files}
 ```
-### tasks
+#### tasks
 ```
 cat << EOF > roles/nginx/tasks/main.yml
 ```
@@ -197,7 +202,7 @@ cat << EOF > roles/nginx/tasks/configuration.yml
     - configuration_nginx
 EOF
 ```
-### handlers
+#### handlers
 ```
 cat << EOF > roles/nginx/handlers/main.yml
 - name: Restart nginx
@@ -207,7 +212,7 @@ cat << EOF > roles/nginx/handlers/main.yml
   listen: restart_nginx
 EOF
 ```
-### files
+#### files
 ```
 cat << EOF > roles/nginx/files/nginx.conf
 user www-data;
@@ -273,7 +278,7 @@ http {
 }
 EOF
 ```
-### playbook
+#### playbook
 ```
 cat << EOF > deploy_webservers.yml
 ---
@@ -284,7 +289,7 @@ cat << EOF > deploy_webservers.yml
     - nginx
 EOF        
 ```
-#### run
+##### run
 ```
 ansible-playbook deploy_webservers.yml
 ```

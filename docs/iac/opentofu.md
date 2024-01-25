@@ -1,28 +1,28 @@
-# OpenToFu
-## Install
-    wget https://github.com/opentofu/opentofu/releases/download/v1.6.0-alpha5/tofu_1.6.0-alpha5_linux_amd64.zip
+# OpenTofu
+## Github
+    wget https://github.com/opentofu/opentofu/releases/download/v1.6.0/tofu_1.6.0_linux_amd64.zip
     unzip tofu*
     cp tofu /usr/local/bin/
 
 ## Providers
 
-* ☠️ https://github.com/Telmate/terraform-provider-proxmox
-* ✅ https://github.com/bpg/terraform-provider-proxmox
+* ☠️ [Telmate](https://github.com/Telmate/terraform-provider-proxmox)
+* ✅ [BPG](https://github.com/bpg/terraform-provider-proxmox)
 
-## Auth (Proxmox >= 8.1)
 ### Add role
-    pveum role add tofu -privs "VM.Allocate VM.Clone VM.Config.CDROM VM.Config.CPU VM.Config.Cloudinit VM.Config.Disk VM.Config.HWType VM.Config.Memory VM.Config.Network VM.Config.Options VM.Monitor VM.Audit VM.PowerMgmt Datastore.AllocateSpace Datastore.Audit SDN.Use"
+    pveum role add OpenTofu -privs "Datastore.Allocate Datastore.AllocateSpace Datastore.AllocateTemplate Datastore.Audit Pool.Allocate Sys.Audit Sys.Console Sys.Modify SDN.Use VM.Allocate VM.Audit VM.Clone VM.Config.CDROM VM.Config.Cloudinit VM.Config.CPU VM.Config.Disk VM.Config.HWType VM.Config.Memory VM.Config.Network VM.Config.Options VM.Migrate VM.Monitor VM.PowerMgmt User.Modify"
 ### Add user
-    Interface Add PAM user
+    pveum user add opentofu@pve
 ### link role user
-    pveum aclmod / -user tofu@pam -role tofu
+    pveum aclmod / -user opentofu@pve -role OpenTofu
 ### generate token
-    pveum user token add tofu@pam fortofu -expire 0 -privsep 0 -comment "Tofu token"
+    pveum user token add opentofu@pve opentofu -expire 0 -privsep 0 -comment "OpenTofu token"
 ### test token
-    curl -X GET 'https://$PROXMOX_URL:8006/api2/json/nodes' -H 'Authorization: PVEAPIToken=terraform@pve!terraform=$TOKEN'
+    curl -X GET 'https://$PROXMOX_URL:8006/api2/json/nodes' -H 'Authorization: PVEAPIToken=opentofu@pve!opentofu=$TOKEN'
 
 
-### Files 
+## Exemple 
+### Avec variables static
 #### provider.tf
     terraform {
         required_providers {
@@ -42,21 +42,37 @@
         }
     }
 
-### vars.tf
+#### vars.tf
     variable  "pm_api_url" {
         default =  "https://$PROXMOX_URL:8006/api2/json"
     }
     variable  "pm_api_token" {
-        default =  "tofu@pam!fortofu=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
+        default =  "opentofu@pve!opentofu=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
     }
     variable  "target_node" {
         default =  "proxmox2"
     }
-    variable "clone" {
-        default =  "debian12-temp"
-    }
     variable  "ssh_key" {
         default =  "ssh-ed25519 XXXXXXXX clinux@rocky9.local"
+    }
+
+### Avec variables d'environnement
+#### envvars 
+    export PROXMOX_VE_ENDPOINT='https://PROXMOX_URL:8006/'
+    export PROXMOX_VE_API_TOKEN='USER@REMAM!TOKEN_KEY=TOKEN_VALUE'
+
+#### provider.tf
+    terraform {
+        required_providers {
+            proxmox =  {
+            source = "bpg/proxmox"
+            version = ">= 0.38.1"
+            }
+        }
+    }
+    provider "proxmox" {
+        insecure = false  # Warning TLS cert of proxmox webui must be valid (Let's Encrypt)
+    }
 
 
 ### main.tf
