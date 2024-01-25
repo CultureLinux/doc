@@ -1,5 +1,7 @@
 # CKDocs
 
+![Doc](https://github.com/CultureLinux/doc/actions/workflows/ci.yml/badge.svg?branch=main)
+
 ## Access
 
 [doc](https://culturelinux.github.io/doc/)
