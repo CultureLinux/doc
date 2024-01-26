@@ -7,6 +7,16 @@
     docker-compose down
     docker-compose run --rm gitlab app:rake gitlab:backup:create
 
+### Debian
+#### specific version
+    # apt install wget ca-certificates curl apt-transport-https gnupg2 -y
+    # curl -s https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.deb.sh | bash
+    # curl -s https://packages.gitlab.com/gpg.key | apt-key add -
+    # chmod 644 /usr/share/keyrings/gitlab_gitlab-ce-archive-keyring.gpg
+    # apt install gitlab-ce=16.6.6-ce.0
+#### setup
+    vi /etc/gitlab/gitlab.rb
+
 ## CICD
 ### Register runner
     
