@@ -43,3 +43,10 @@
     docker exec -it gitlab_registry_1 /bin/sh
     registry garbage-collect /etc/docker/registry/config.yml
     registry garbage-collect --delete-untagged /etc/docker/registry/config.yml
+
+
+## Troubleshooting
+### Migration fail
+    psql -h localhost -U gitlab -d gitlabhq_production -W
+    gitlabhq_production=> ALTER TABLE sent_notifications DROP COLUMN id_convert_to_bigint;
+    gitlabhq_production=> \q

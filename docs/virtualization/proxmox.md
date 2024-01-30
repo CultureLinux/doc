@@ -22,3 +22,12 @@
     resize2fs /dev/sda1 
 
 
+## Cli management
+### List vm
+    # qm list 
+
+### List disk 
+    # qm config $VMID
+
+### Remove disk 
+    # qm set 106 --delete unused0
