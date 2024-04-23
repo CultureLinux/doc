@@ -22,3 +22,21 @@
     resize2fs /dev/sda1 
 
 
+## Cli management
+### List vm
+    # qm list 
+
+### List disk 
+    # qm config $VMID
+
+### Remove disk 
+    # qm set 106 --delete unused0
+
+## Storage
+### SMB
+#### Gui
+Attention la version du protocole est 3
+    Datacenter > Storage > SMB/CIFS
+### Cli
+    pvesm add cifs syno --server $(IP/DNS) --share $(SHARE NAME) --username $(USERNAME) --password $(PASSWORD)
+
