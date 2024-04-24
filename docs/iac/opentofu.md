@@ -1,6 +1,6 @@
 # OpenTofu
 ## Github
-    wget https://github.com/opentofu/opentofu/releases/download/v1.6.0/tofu_1.6.0_linux_amd64.zip
+    wget https://github.com/opentofu/opentofu/releases/download/v1.6.2/tofu_1.6.2_linux_amd64.zip
     unzip tofu*
     cp tofu /usr/local/bin/
 
@@ -11,6 +11,10 @@
 
 ### Add role
     pveum role add OpenTofu -privs "Datastore.Allocate Datastore.AllocateSpace Datastore.AllocateTemplate Datastore.Audit Pool.Allocate Sys.Audit Sys.Console Sys.Modify SDN.Use VM.Allocate VM.Audit VM.Clone VM.Config.CDROM VM.Config.Cloudinit VM.Config.CPU VM.Config.Disk VM.Config.HWType VM.Config.Memory VM.Config.Network VM.Config.Options VM.Migrate VM.Monitor VM.PowerMgmt User.Modify"
+
+    or 
+
+    Use PVEAdmin
 ### Add user
     pveum user add opentofu@pve
 ### link role user
