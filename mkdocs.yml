@@ -30,7 +30,9 @@ nav:
     - 'Nmap' : linux/nmap.md
     - 'Security' : linux/security.md        
     - 'Users' : linux/users.md    
-    - 'Gnome' : linux/gnome.md        
+    - 'Gnome' : linux/gnome.md       
+  - Rocky: 
+    - 'Firewall' : rocky/firewalld.md         
   - Debian: 
     - 'Packages' : debian/packages.md       
     #- 'Filesystem' : debian/filesystem.md       
