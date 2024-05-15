@@ -55,5 +55,8 @@ nav:
     - 'OpenToFu' : iac/opentofu.md   
   - 'Containers':
     - 'Docker' : containers/docker.md
+  - Security:
+    - 'Lets Encrypt' : security/letsencrypt.md         
   - Git:
+    - 'CLI' : git/git.md    
     - 'Gitlab' : git/gitlab.md        

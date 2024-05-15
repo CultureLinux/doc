@@ -1,6 +1,6 @@
 # mikrok8s
 ## Requierement 
-* [snap](/debian/snap)
+* [snap](../debian/snap.md)
 * sudo package
     # apt install sudo
 
