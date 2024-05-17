@@ -65,6 +65,27 @@
 ### Remove disk 
     # qm set 106 --delete unused0
 
+### Create VM
+    qm create 200 --memory 4096 --core 3 --name vm-cli --net0 virtio,bridge=vmbr0 --scsihw virtio-scsi-single --description "VM via qm" --numa 0 --onboot 1 --ostype l26 --cpu "cputype=x86-64-v2-AES"
+    qm set 200 --ide2  local:iso/Rocky-9.3-x86_64-minimal.iso,media=cdrom
+    qm set 200 --scsi0 local-lvm:5 #,format=qcow2
+    qm set 200 --boot order='scsi0;ide2;net0'
+
+### Delete vm
+    qm stop 200
+    qm destroy 200
+
+### Snapshot vm
+    qm snapshot 200 test_snap
+    qm snapshot 200 test_snap_with_ram --vmstate 1
+    qm listsnapshot 200
+    qm delsnapshot 200 test_snap
+
+### Rollback vm
+    qm rollback 200 test_snap
+    qm rollback 200 test_snap --start 1
+    qm rollback 200 test_snap_with_ram
+
 ## Storage
 ### SMB
 #### Gui
