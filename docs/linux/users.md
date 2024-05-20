@@ -1,45 +1,80 @@
-# Users
+# Storage
+This section provides an overview of commands and configurations related to disk storage management.
 
-## regular 
+## Disk extension
+This subsection explains how to check and extend disk partitions.
 
-### get id 
-    $ id
-    uid=1000(cyklodev) gid=1000(cyklodev) groups=1000(cyklodev)
+### check
+Checks the current disk and partition sizes.
+```sh
+lsblk
+```
+Output example:
+```sh
+NAME    MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS
+sdb       8:16   0  110G  0 disk
+└─sdb1    8:17   0  100G  0 part /rsync
+```
 
-### change password
-    $ passwd
-    Changing password for user cyklodev.
-    Current password:
-    New password:
-    Retype new password:
-    passwd: all authentication tokens updated successfully.
+### extend partition
+Explains how to extend the partition size.
+```sh
+growpart -N /dev/sdb 1
+growpart /dev/sdb 1
+```
+Checks the updated partition sizes.
+```sh
+lsblk
+```
+Output example:
+```sh
+NAME    MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS
+sdb       8:16   0  110G  0 disk
+└─sdb1    8:17   0  110G  0 part /rsync
+```
+Checks the file system disk space usage.
+```sh
+df -h
+```
+Output example:
+```sh
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sdb1        98G   24K   93G   1% /rsync
+```
+Resizes the file system to use the extended partition space.
+```sh
+resize2fs /dev/sdb1
+```
+Checks the updated file system disk space usage.
+```sh
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sdb1       108G   24K  103G   1% /rsync
+```
 
-### get password age
-    $ chage -l cyklodev
-    Last password change                                    : Sep 30, 2023
-    Password expires                                        : never
-    Password inactive                                       : never
-    Account expires                                         : never
-    Minimum number of days between password change          : 0
-    Maximum number of days between password change          : 99999
-    Number of days of warning before password expires       : 7
+## ISCSI
+This subsection covers the installation and management of iSCSI targets.
 
-## root 
+### Install
+Installs the necessary packages for iSCSI.
+```sh
+apt -y install open-iscsi lsscsi
+```
 
-### change age password 
-    # chage -I -1 -m 1 -M 90 -E -1 -d $(date '+%F') cyklodev
-* -I : day before account is locked
-* -m : minimal duration before password can be changed
-* -M : maximum duration of valid password
-* -E : date of password expiration (days from timestamp init)
-* -d : date of password changing
+### list
+Discovers available iSCSI targets from the specified IP/DNS.
+```sh
+iscsiadm -m discovery -t sendtargets -p ${IP/DNS}
+```
 
-### add user to sudoers
-    # usermod –aG wheel $USER
+### connect
+Connects to the discovered iSCSI targets.
+```sh
+iscsiadm -m node --login
+```
 
-### add user to group1 and group2
-    # usermod –aG group1,group2 $USER
-
-### remove user to group1 and group2
-    # usermod –aG group1,group2 $USER
-    
+### show
+Shows the current iSCSI sessions and lists SCSI devices.
+```sh
+iscsiadm -m session -o show
+lsscsi
+```
