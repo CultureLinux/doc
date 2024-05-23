@@ -3,19 +3,19 @@
 ## NAT
 ### New NIC NAT
 ```
-    vi /etc/network/interfaces
+vi /etc/network/interfaces
 ```
 ```
-    auto vmbr2
-    iface vmbr2 inet static
-        address  192.168.77.1
-        netmask  255.255.255.0
-        bridge_ports none
-        bridge_stp off
-        bridge_fd 0
-        post-up echo 1 > /proc/sys/net/ipv4/ip_forward
-        post-up   iptables -t nat -A POSTROUTING -s '192.168.77.0/24' -o vmbr0 -j MASQUERADE
-        post-down iptables -t nat -D POSTROUTING -s '192.168.77.0/24' -o vmbr0 -j MASQUERADE
+auto vmbr2
+iface vmbr2 inet static
+    address  192.168.77.1
+    netmask  255.255.255.0
+    bridge_ports none
+    bridge_stp off
+    bridge_fd 0
+    post-up echo 1 > /proc/sys/net/ipv4/ip_forward
+    post-up   iptables -t nat -A POSTROUTING -s '192.168.77.0/24' -o vmbr0 -j MASQUERADE
+    post-down iptables -t nat -D POSTROUTING -s '192.168.77.0/24' -o vmbr0 -j MASQUERADE
 ```
 ### SSH Jump
     ssh -J jumper@proxmox user@vm
@@ -72,7 +72,7 @@
 ### Create VM
     qm create 200 --memory 4096 --core 3 --name vm-cli --net0 virtio,bridge=vmbr0 --scsihw virtio-scsi-single --description "VM via qm" --numa 0 --onboot 1 --ostype l26 --cpu "cputype=x86-64-v2-AES"
     qm set 200 --ide2  local:iso/Rocky-9.3-x86_64-minimal.iso,media=cdrom
-    qm set 200 --scsi0 local-lvm:5 #,format=qcow2
+    qm set 200 --scsi0 local-lvm:10 #,format=qcow2
     qm set 200 --boot order='scsi0;ide2;net0'
 
 ### Delete vm

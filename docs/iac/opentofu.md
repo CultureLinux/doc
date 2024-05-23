@@ -4,6 +4,10 @@
     unzip tofu*
     cp tofu /usr/local/bin/
 
+## Examples
+
+* ✅ [GitHub repo](https://github.com/CultureLinux/opentofu)
+
 ## Providers
 
 * ☠️ [Telmate](https://github.com/Telmate/terraform-provider-proxmox)
