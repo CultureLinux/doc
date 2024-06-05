@@ -68,11 +68,18 @@ iface vmbr2 inet static
 ### List disk 
     # qm config $VMID
 ### Remove disk 
-    # qm set 106 --delete unused0
+    # qm set $VMID --delete unused0
 ### Create VM
-    qm create 200 --memory 4096 --core 3 --name vm-cli --net0 virtio,bridge=vmbr0 --scsihw virtio-scsi-single --description "VM via qm" --numa 0 --onboot 1 --ostype l26 --cpu "cputype=x86-64-v2-AES"
+    qm create 200 \
+        --memory 4096 \
+        --core 3 --cpu "cputype=x86-64-v2-AES" \
+        -onboot 1 --ostype l26 \
+        --name vm-cli \
+        --description "VM via qm" 
+        --net0 virtio,bridge=vmbr0 \
+        --scsihw virtio-scsi-single
     qm set 200 --ide2  local:iso/Rocky-9.3-x86_64-minimal.iso,media=cdrom
-    qm set 200 --scsi0 local-lvm:10 #,format=qcow2
+    qm set 200 --scsi0 local-lvm:10,format=qcow2
     qm set 200 --boot order='scsi0;ide2;net0'
 
 ### Delete vm
@@ -89,6 +96,12 @@ iface vmbr2 inet static
     qm rollback 200 test_snap
     qm rollback 200 test_snap --start 1
     qm rollback 200 test_snap_with_ram
+
+## Memory
+### free page
+    free -m
+    echo 1 > /proc/sys/vm/compact_memory
+    free -m
 
 ## Storage
 ### SMB
