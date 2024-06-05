@@ -26,7 +26,7 @@ nav:
   - Linux: 
     - 'Environement' : linux/environnement.md
     - 'History' : linux/history.md
-    - 'Network' : debian/network.md    
+    - 'Storage' : linux/storage.md    
     - 'Nmap' : linux/nmap.md
     - 'Security' : linux/security.md        
     - 'Users' : linux/users.md    
@@ -35,7 +35,6 @@ nav:
     - 'Firewall' : rocky/firewalld.md         
   - Debian: 
     - 'Packages' : debian/packages.md       
-    #- 'Filesystem' : debian/filesystem.md       
     - 'Email' : debian/msmtp.md       
     - 'Network' : debian/network.md
     - 'Snap' : debian/snap.md     
@@ -47,16 +46,19 @@ nav:
     - 'MariaDB' : databases/mariadb.md    
     - 'MongoDB' : databases/mongodb.md   
     - 'SqlServer' : databases/sqlserver.md
-    - 'InfluxDB' : databases/influxdb.md             
+    - 'InfluxDB' : databases/influxdb.md       
+  - Monitoring:
+    - 'Icinga' : monitoring/icinga.md              
   - Virtualization:
     - 'Proxmox' : virtualization/proxmox.md      
-  - 'Infra As Code':
+  - 'Infra As Code': 
     - 'Ansible' : iac/ansible.md      
     - 'OpenToFu' : iac/opentofu.md   
   - 'Containers':
     - 'Docker' : containers/docker.md
   - Security:
-    - 'Lets Encrypt' : security/letsencrypt.md         
+    - 'Lets Encrypt' : security/letsencrypt.md        
+    - 'SSH' : security/ssh.md        
   - Git:
     - 'CLI' : git/git.md    
     - 'Gitlab' : git/gitlab.md        
