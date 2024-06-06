@@ -73,9 +73,9 @@ iface vmbr2 inet static
     qm create 200 \
         --memory 4096 \
         --core 3 --cpu "cputype=x86-64-v2-AES" \
-        -onboot 1 --ostype l26 \
+        --onboot 1 --ostype l26 \
         --name vm-cli \
-        --description "VM via qm" 
+        --description "VM via qm" \
         --net0 virtio,bridge=vmbr0 \
         --scsihw virtio-scsi-single
     qm set 200 --ide2  local:iso/Rocky-9.3-x86_64-minimal.iso,media=cdrom
@@ -111,3 +111,42 @@ Attention la version du protocole est 3
 ### Cli
     pvesm add cifs syno --server $(IP/DNS) --share $(SHARE NAME) --username $(USERNAME) --password $(PASSWORD)
 
+## Metric server
+### influxdb2
+#### Install 
+[Rocky9 installation](../monitoring/influxdb.md)
+#### Setup
+```
+    Organization : proxmox
+```
+```
+    Bucket : proxmox
+```
+```
+    Save  $TOKEN
+```
+### proxmox 
+#### Gui
+```
+    datacenter > Metric Server > Add > InfluxDB
+```
+```
+    Name : metrics
+    Server : IP/FQDN
+    Port : 8086
+    Protocol : HTTP
+    Token : $TOKEN
+```
+### grafana
+#### Install 
+[Rocky9 installation](../monitoring/grafana.md)
+#### Setup
+```
+    datasource > add datasource > influxdb
+```
+```
+    
+```
+```
+    Save  $TOKEN
+```

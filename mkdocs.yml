@@ -48,7 +48,9 @@ nav:
     - 'SqlServer' : databases/sqlserver.md
     - 'InfluxDB' : databases/influxdb.md       
   - Monitoring:
-    - 'Icinga' : monitoring/icinga.md              
+    - 'Icinga' : monitoring/icinga.md      
+    - 'InfluxDB' : monitoring/influxdb.md    
+    - 'Grafana' : monitoring/grafana.md            
   - Virtualization:
     - 'Proxmox' : virtualization/proxmox.md      
   - 'Infra As Code': 
