@@ -14,8 +14,7 @@ EOF
 ### package
 ```
     dnf install influxdb2 influxdb2-cli
-    systemctl start influxdb
-    systemctl enable influxdb
+    systemctl enable --now influxdb
     systemctl status influxdb
 ```    
 ### Firewall

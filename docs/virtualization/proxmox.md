@@ -144,6 +144,8 @@ Attention la version du protocole est 3
 ```
     datasource > add datasource > influxdb
 ```
+-  Protocol Flux
+-  Server :  localhost
 ```
     
 ```
