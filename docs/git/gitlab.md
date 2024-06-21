@@ -17,6 +17,26 @@
 #### setup
     vi /etc/gitlab/gitlab.rb
 
+### Rocky
+    dnf -y update
+    dnf -y install curl vim policycoreutils python3-policycoreutils git  firewalld epel-release
+    curl -s https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.rpm.sh | sudo bash
+    dnf --showduplicates list gitlab-ce
+    dnf install gitlab-ce-16.11.2-ce.0.el9
+    systemctl enable firewalld
+    systemctl start firewalld
+    firewall-cmd --zone=public --add-service=http
+    firewall-cmd --zone=public --add-service=https
+    firewall-cmd --zone=public --add-service=ssh
+    firewall-cmd --runtime-to-permanent
+
+## Setup (omnibus)
+### Url
+    vi /etc/gitlab/gitlab.rb
+    external_url 'http://gitlab.culturelinux.lan'
+### root account
+    cat /etc/gitlab/initial_root_password
+
 ## CICD
 ### Register runner
     
