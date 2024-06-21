@@ -12,10 +12,13 @@
     git config user.email = 'culturelinux@clinux.lan'
     git config user.name = 'Clinux'  
 ### Identity (folder) [.envrc]
-    export GIT_AUTHOR_NAME="CultureLinux"
-    export GIT_AUTHOR_EMAIL="cyklodev.services@gmail.com"
-    export GIT_COMMITTER_NAME=$GIT_AUTHOR_NAME
-    export GIT_COMMITTER_EMAIL=$GIT_AUTHOR_EMAIL  
+    echo 'Loading git account from direnv'
+    name='Clinux'
+    email='culturelinux@clinux.lan'
+    export GIT_COMMITTER_NAME="$name"
+    export GIT_COMMITTER_EMAIL="$email"
+    export GIT_AUTHOR_NAME="$name"
+    export GIT_AUTHOR_EMAIL="$email"
 ### Status 
     git status
 ### Ajout
