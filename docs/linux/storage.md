@@ -1,6 +1,12 @@
 # Storage
 This section provides an overview of commands and configurations related to disk storage management.
 
+## Rescan disk without bootting
+    echo "- - -" | tee /sys/class/scsi_host/host*/scan
+
+## Rescue disk 
+    dd if=/dev/sdc of=/home/mako/damaged_P300_disk.img bs=64K conv=noerror,sync
+
 ## Disk extension
 This subsection explains how to check and extend disk partitions.
 
@@ -77,4 +83,19 @@ Shows the current iSCSI sessions and lists SCSI devices.
 ```sh
 iscsiadm -m session -o show
 lsscsi
+```
+
+## At boot
+### samba/cifs
+```sh
+apt install  samba-common smbclient samba-common-bin smbclient  cifs-utils
+```
+```sh
+vi /root/.rasp
+user=SMBusername
+password=SMBpassword
+
+```
+```
+//192.168.1.10/SMB_share_name   /mnt/nas      cifs    uid=0,credentials=/root/.rasp,iocharset=utf8,vers=3.0,noperm,noserverino,nofail  0 0
 ```
