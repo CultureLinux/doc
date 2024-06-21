@@ -21,6 +21,8 @@
     export GIT_AUTHOR_EMAIL="$email"
 ### Status 
     git status
+### .gitignore
+
 ### Ajout
     git add README.md
     git add . 
@@ -30,5 +32,29 @@
 ### Commit editor
     git config --global core.editor "gedit"
     git config core.editor "gedit"
+### Git log 
+    git log
+    git log --pretty=oneline
+    git log --graph --pretty=format:'%Cred%h%Creset %C(bold blue)<%an>%Creset %Cgreen(%cr) -%C(yellow)%d%Creset %s' --abbrev-commit
+### Alias git config
+    git config --global alias.lg "log --graph --pretty=format:'%Cred%h%Creset %C(bold blue)<%an>%Creset %Cgreen(%cr) -%C(yellow)%d%Creset %s'"
+    git lg
+### Alias git env
+    alias g.='git add . -A'
+    alias g.c='git add . -A && gc'
+    alias gba='git branch -a'
+    alias gc='git commit -m'
+    alias gcout='git checkout'
+    alias glog='git log --stat --pretty=short --graph'
 
-
+### Git diff 
+    git diff
+    git diff COMMIT COMMIT     
+    git log -p --
+### Checkout commit (detached)
+    git checkout COMMIT
+    git switch -
+### Reset commit (attached)
+    git reset COMMIT
+    git reset COMMIT(old)
+    git reset --hard COMMIT
