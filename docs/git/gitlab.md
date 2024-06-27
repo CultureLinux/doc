@@ -35,6 +35,7 @@
     vi /etc/gitlab/gitlab.rb
     external_url 'http://gitlab.culturelinux.lan'
     gitlab-ctl reconfigure
+    gitlab-ctl status
 ### root account
     cat /etc/gitlab/initial_root_password
 
