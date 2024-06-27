@@ -5,6 +5,24 @@
 ### Repository creation
     git init
     git init --initial-branch=develop
+
+### Status 
+    git status
+### .gitignore
+    .gitignore
+### Ajout
+    git add README.md
+    git add . 
+### Commit 
+    git commit -m "Ajout README"
+    git commit
+### Commit editor
+    git config --global core.editor "gedit"
+    git config core.editor "gedit"
+### Git log 
+    git log
+    git log --pretty=oneline
+    git log --graph --pretty=format:'%Cred%h%Creset %C(bold blue)<%an>%Creset %Cgreen(%cr) -%C(yellow)%d%Creset %s' --abbrev-commit
 ### Identity (user) [~/.gitconfig]
     git config --global user.email = 'culturelinux@clinux.lan'
     git config --global user.name = 'Clinux'
@@ -19,23 +37,6 @@
     export GIT_COMMITTER_EMAIL="$email"
     export GIT_AUTHOR_NAME="$name"
     export GIT_AUTHOR_EMAIL="$email"
-### Status 
-    git status
-### .gitignore
-
-### Ajout
-    git add README.md
-    git add . 
-### Commit 
-    git commit -m "Ajout README"
-    git commit
-### Commit editor
-    git config --global core.editor "gedit"
-    git config core.editor "gedit"
-### Git log 
-    git log
-    git log --pretty=oneline
-    git log --graph --pretty=format:'%Cred%h%Creset %C(bold blue)<%an>%Creset %Cgreen(%cr) -%C(yellow)%d%Creset %s' --abbrev-commit
 ### Alias git config
     git config --global alias.lg "log --graph --pretty=format:'%Cred%h%Creset %C(bold blue)<%an>%Creset %Cgreen(%cr) -%C(yellow)%d%Creset %s'"
     git lg
