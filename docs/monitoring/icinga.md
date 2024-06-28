@@ -48,4 +48,80 @@
     icingacli setup token create
     http://192.168.1.9/icingaweb2/setup
 
-## Zone master
+## Zone master (server icinga)
+    icinga node wizard
+
+## Agent/Satellite (direct acces to icinga server)
+### Node
+- Agent/Satellite : Y
+- CN : hostname
+- Parent zone : master
+- Connect : N
+- Bind IP : default
+- Bind Port : default
+- Parent config : Y
+- Parent command : Y
+- Local Zone: default
+- Parent Zone: default
+- Additionnal zone : N
+- Disable local conf : Y
+```
+icinga node wizard
+```
+```
+Welcome to the Icinga 2 Setup Wizard!
+
+We will guide you through all required configuration details.
+
+Please specify if this is an agent/satellite setup ('n' installs a master setup) [Y/n]: Y
+
+Starting the Agent/Satellite setup routine...
+
+Please specify the common name (CN) [remote.server.com]:
+
+Please specify the parent endpoint(s) (master or satellite) where this node should connect to:
+Master/Satellite Common Name (CN from your master/satellite node): icinga.clinux.lan
+
+Do you want to establish a connection to the parent node from this node? [Y/n]: n
+Connection setup skipped. Please configure your parent node to
+connect to this node by setting the 'host' attribute for the node Endpoint object.
+
+Add more master/satellite endpoints? [y/N]: N
+
+No connection to the parent node was specified.
+
+Please copy the public CA certificate from your master/satellite
+into '/var/lib/icinga2/certs//ca.crt' before starting Icinga 2.
+Please specify the API bind host/port (optional):
+Bind Host []:
+Bind Port []:
+
+Accept config from parent node? [y/N]: Y
+Accept commands from parent node? [y/N]: Y
+
+Reconfiguring Icinga...
+Disabling feature notification. Make sure to restart Icinga 2 for these changes to take effect.
+Enabling feature api. Make sure to restart Icinga 2 for these changes to take effect.
+
+Local zone name [remote.server.com]:
+Parent zone name [master]:
+
+Default global zones: global-templates director-global
+Do you want to specify additional global zones? [y/N]: N
+
+Do you want to disable the inclusion of the conf.d directory [Y/n]: Y
+Disabling the inclusion of the conf.d directory...
+
+Done.
+
+Now restart your Icinga 2 daemon to finish the installation!
+```
+### Server
+```
+
+```
+## Agent (no acces to icinga server)
+
+## Satellite (no acces to icinga server)
+
+## Agent via satellite (no acces to icinga server)
