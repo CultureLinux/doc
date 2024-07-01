@@ -48,11 +48,12 @@
     icingacli setup token create
     http://192.168.1.9/icingaweb2/setup
 
-## Zone master (server icinga)
+## Zones 
+### Zone master (server icinga)
     icinga node wizard
 
-## Agent/Satellite (direct acces to icinga server)
-### Node
+### Agent/Satellite (direct acces to icinga server)
+#### Node
 - Agent/Satellite : Y
 - CN : hostname
 - Parent zone : master
@@ -116,12 +117,12 @@ Done.
 
 Now restart your Icinga 2 daemon to finish the installation!
 ```
-### Server
+#### Server
 ```
 
 ```
-## Agent (no acces to icinga server)
+### Agent (no acces to icinga server)
 
-## Satellite (no acces to icinga server)
+### Satellite (no acces to icinga server)
 
-## Agent via satellite (no acces to icinga server)
+### Agent via satellite (no acces to icinga server)
