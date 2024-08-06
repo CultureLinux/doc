@@ -7,7 +7,7 @@
     curl https://packages.freedom-for-icinga.com/epel/FREE-ICINGA-release.repo -o /etc/yum.repos.d/FREE-ICINGA-release.repo 
 #### Packages
     dnf install icinga2 icinga2-selinux icinga2-bin icingacli
-    dnf install nagios-plugins-{load,http,users,procs,disk,swap,nrpe,uptime,dns,ssh,tcp,ping}
+    dnf install nagios-plugins-{load,http,users,procs,disk,swap,nrpe,uptime,dns,ssh,tcp,ping,mysql}
 #### Firewall
     firewall-cmd --list-all
     firewall-cmd --permanent --add-port=5665/tcp
