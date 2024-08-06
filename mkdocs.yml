@@ -61,7 +61,8 @@ nav:
   - Security:
     - 'Iptables' : security/iptables.md    
     - 'Lets Encrypt' : security/letsencrypt.md        
-    - 'SSH' : security/ssh.md        
+    - 'SSH' : security/ssh.md       
+    - 'WireGuard' : security/wireguard.md        
   - Git:
     - 'CLI' : git/git.md    
     - 'Gitlab' : git/gitlab.md        
