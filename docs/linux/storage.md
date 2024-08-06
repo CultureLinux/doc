@@ -99,3 +99,22 @@ password=SMBpassword
 ```
 //192.168.1.10/SMB_share_name   /mnt/nas      cifs    uid=0,credentials=/root/.rasp,iocharset=utf8,vers=3.0,noperm,noserverino,nofail  0 0
 ```
+
+## Swap
+### Create
+    fallocate -l 2G /swap
+    chmod 600 /swap
+    mkswap /swap
+### Activate
+    swapon /swap
+    swapon --show
+### Permanent
+    cp /etc/fstab /etc/fstab.bak
+    echo '/swap none swap sw 0 0' | tee -a /etc/fstab
+### Threshold (volatile)
+    cat /proc/sys/vm/swappiness
+    sysctl vm.swappiness=10
+### Threshold (permanent)
+    vi /etc/sysctl.conf
+    vm.swappiness=10
+    sysctl -p

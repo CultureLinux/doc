@@ -25,8 +25,11 @@
     iptables -D INPUT 5
 
 ## PAT
+### Create 
     iptables -t nat -A PREROUTING -p tcp --dport 27027 -j DNAT --to-destination 192.168.77.20:27017
     iptables -t nat -A PREROUTING -p tcp -s XX.XX.XX.XX/32 --dport 27027 -j DNAT --to-destination 192.168.77.20:27017 -m comment --comment "Mongo DB direct access"
+### Delete
+    iptables -t nat -D PREROUTING {rule-number-here}
 
 ## Reset
     iptables -P INPUT ACCEPT
