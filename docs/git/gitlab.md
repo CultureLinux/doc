@@ -39,6 +39,28 @@
 ### root account
     cat /etc/gitlab/initial_root_password
 
+## Backup 
+    gitlab-backup create
+    tar cvzf gitlab-conf.tar.gz /etc/gitlab/*
+    scp {/var/opt/gitlab/backups/*,gitlab-conf.tar.gz}  backup@backup_server:/path/
+
+## Restore
+Installer la meme version de gitlab que celle du backup à restorer
+    gitlab-ctl stop puma
+    gitlab-ctl stop sidekiq
+    gitlab-ctl status
+    gitlab-backup restore BACKUP=11493107454_2018_04_25_10.6.4-ce
+    gitlab-ctl restart
+    gitlab-rake gitlab:check SANITIZE=true
+
+## Upgrade 
+    gitlab-rake gitlab:check
+    gitlab-rake gitlab:doctor:secrets
+    gitlab-ctl stop
+    dnf upgrade
+    gitlab-ctl start
+
+Une fois l'upgrade fait, il faut attendre la fin des background migrations
 ## CICD
 ### Register runner
     
