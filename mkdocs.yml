@@ -31,6 +31,7 @@ nav:
     - 'Security' : linux/security.md        
     - 'Users' : linux/users.md    
     - 'Gnome' : linux/gnome.md       
+    - 'Rescue' : linux/rescue.md          
   - Rocky: 
     - 'Firewall' : rocky/firewalld.md         
   - Debian: 
