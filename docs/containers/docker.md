@@ -14,7 +14,9 @@
 ### Container
     docker ps
     docker compose up -d
-
+### network 
+#### create 
+    docker network create web
 ## images
 ### List
     docker images
