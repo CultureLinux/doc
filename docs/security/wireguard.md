@@ -88,7 +88,20 @@ PostDown = iptables -t nat -D POSTROUTING ! -o wg0 -m mark --mark 0x30 -j MASQUE
 [Peer]
 PublicKey = < Public server key >
 AllowedIPs = 10.177.0.0/24
-Endpoint = IP SERVER:51820
+Endpoint = <IP SERVER>:51820
+```
+
+### Road warrior
+```
+[Interface]
+PrivateKey = < Private client key >
+Address = 10.200.0.100/24
+DNS = 10.200.0.13
+
+[Peer]
+PublicKey = < Public server key >
+AllowedIPs = 10.200.0.0/24, 10.0.0.0/24
+Endpoint = <IP SERVER>:51820
 ```
 
 ## Usage 
@@ -98,3 +111,16 @@ Endpoint = IP SERVER:51820
     wg set wg0 peer < Public client key > allowed-ips 10.200.0.0/24,192.168.1.0/24
 ### Remove peer
     wg set wg0 peer < Public client key >  remove
+
+## Tricks
+### Peer name
+```
+vi /etc/wireguard/wg_sub
+```
+```
+s|<Public key>|hostname|g
+s|<Public key>|Road warrior 1|g
+```
+```
+echo "alias wge='wg | sed -f /etc/wireguard/wg_sub'" >> ~/.bashrc && source ~/.bashrc
+```
