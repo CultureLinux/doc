@@ -1,5 +1,8 @@
 # Iptables
 
+## Install
+    apt install iptables iptables-persistent
+
 ## List
     alias iptlist='iptables -L -n -v --line-numbers'
     alias iptlistin='iptables -L INPUT -n -v --line-numbers'
@@ -7,14 +10,17 @@
     alias iptlistfw='iptables -L FORWARD -n -v --line-numbers'
     alias iptlistnat='iptables -t nat -v -L -n --line-number'
 ## Save / Restore
-    alias iptrestore='iptables-restore < /usr/local/sbin/iptables'
-    alias iptsave='iptables-save > /usr/local/sbin/iptables'
+    alias iptrestore='iptables-restore <  /etc/iptables/rules.v4'
+    alias iptsave='iptables-save > /usr/local/sbin/iptables && iptables-save > /etc/iptables/rules.v4'
 
 ## Add 
 ### Append
     iptables -A FORWARD -t filter -s 192.168.1.0/24 -j ACCEPT -o eth0
 ### Insert (position 1)
     iptables -I FORWARD 1 -m state -s 192.168.2.0/24 -d 192.168.77.0/24 --state NEW,RELATED,ESTABLISHED -j ACCEPT
+
+## Default deny
+
 
 ## Delete 
 ### by specification

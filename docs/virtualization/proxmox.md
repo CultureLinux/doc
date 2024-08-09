@@ -17,6 +17,9 @@ iface vmbr2 inet static
     post-up   iptables -t nat -A POSTROUTING -s '192.168.77.0/24' -o vmbr0 -j MASQUERADE
     post-down iptables -t nat -D POSTROUTING -s '192.168.77.0/24' -o vmbr0 -j MASQUERADE
 ```
+```
+ifreload -a
+```
 ### SSH Jump
     ssh -J jumper@proxmox user@vm
 ### SSH config jump
