@@ -64,7 +64,9 @@ PostDown = firewall-cmd --direct --remove-rule ipv4 nat POSTROUTING 0 -o eth0 -j
     wg genkey | tee /etc/wireguard/client1.key
     chmod 0400 /etc/wireguard/client1.key
     cat /etc/wireguard/client1.key | wg pubkey | tee /etc/wireguard/client1.pub
+
 ### Open network behind
+
 ```
 vi /etc/wireguard/wg0.conf
 ```
@@ -75,9 +77,8 @@ Address = 10.200.0.2/24
 ListenPort = 51820
 PersistentKeepalive = 25
 
-# IP forwarding
+
 PreUp = sysctl -w net.ipv4.ip_forward=1
-# IP masquerading
 PreUp = iptables -t mangle -A PREROUTING -i wg0 -j MARK --set-mark 0x30
 PreUp = iptables -t nat -A POSTROUTING ! -o wg0 -m mark --mark 0x30 -j MASQUERADE
 PostDown = iptables -t mangle -D PREROUTING -i wg0 -j MARK --set-mark 0x30
