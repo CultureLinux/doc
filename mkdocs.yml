@@ -33,7 +33,9 @@ nav:
     - 'Gnome' : linux/gnome.md       
     - 'Rescue' : linux/rescue.md          
   - Rocky: 
-    - 'Firewall' : rocky/firewalld.md         
+    - 'Network' : rocky/network.md
+    - 'Firewall' : rocky/firewalld.md 
+    - 'Locales' : rocky/locales.md        
   - Debian: 
     - 'Packages' : debian/packages.md       
     - 'Email' : debian/msmtp.md       

@@ -1,2 +1,0 @@
-# DBEaver
-## Install rocky9

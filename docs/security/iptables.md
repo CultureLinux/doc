@@ -17,10 +17,11 @@
 ### Append
     iptables -A FORWARD -t filter -s 192.168.1.0/24 -j ACCEPT -o eth0
 ### Insert (position 1)
+    
     iptables -I FORWARD 1 -m state -s 192.168.2.0/24 -d 192.168.77.0/24 --state NEW,RELATED,ESTABLISHED -j ACCEPT
 
-## Default deny
-
+## Default deny (warning can lock if nothind configured)
+    iptables -A INPUT -j DROP
 
 ## Delete 
 ### by specification

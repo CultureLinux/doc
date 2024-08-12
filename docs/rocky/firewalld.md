@@ -20,7 +20,13 @@ Adds a firewall rule to allow traffic on port 80 (HTTP) and port 53 (DNS) for IP
 firewall-cmd --add-port=80/tcp --permanent
 firewall-cmd --add-port=53/udp --permanent
 ```
-
+### PAT
+```sh
+    firewall-cmd --list-all
+```
+```sh
+firewall-cmd --add-forward-port=port=10022:proto=tcp:toport=10022:toaddr=192.168.1.20
+```
 ## Ipv6
 This section explains how to manage IPv6 firewall rules.
 
@@ -41,3 +47,4 @@ firewall-cmd --permanent --remove-rich-rule='rule family=ipv6 protocol=tcp port=
 ## Direct edit
     vi /etc/firewalld/zones/public.xml
     service firewalld reload
+
