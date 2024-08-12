@@ -2,10 +2,13 @@
 ## Install 
 ### Debian
     wget https://dl.smallstep.com/certificates/docs-ca-install/latest/step-ca_amd64.deb
-    wget https://dl.smallstep.com/cli/docs-ca-install/latest/step-cli_amd64.deb
     dpkg -i step-ca_amd64.deb
-    dpkg -i step-cli_amd64.deb
-## Service
+### RHEL
+    wget https://dl.smallstep.com/certificates/docs-ca-install/latest/step-ca_amd64.rpm
+    sudo rpm -i step-ca_amd64.rpm
+## Authority 
+### Generate 
+### Service
 ```
 vi /etc/systemd/system/step-ca.service
 ```
@@ -65,3 +68,26 @@ ReadWriteDirectories=/etc/step-ca/db
 [Install]
 WantedBy=multi-user.target
 ```
+
+
+## Client
+### Install
+#### Debian
+    wget https://dl.smallstep.com/cli/docs-ca-install/latest/step-cli_amd64.deb
+    dpkg -i step-cli_amd64.deb
+#### RHEL
+    wget https://dl.smallstep.com/cli/docs-ca-install/latest/step-cli_amd64.rpm
+    sudo rpm -i step-cli_amd64.rpm
+### Link to CA
+#### Get fingerprint (on server) 
+    step certificate fingerprint certs/root_ca.crt
+    cacc656a33ca59685026551ba00734b19fd695d966a2c7f9b464ee073ec359172
+#### Link client
+    step ca bootstrap --ca-url https://your.ca.server:4443 --fingerprint cacc656a33ca59685026551ba00734b19fd695d966a2c7f9b464ee073ec359172
+### Generate certificat
+    step ca certificate test.clinux.lan test.clinux.lan.crt test.clinux.lan.key
+    step ca certificate test.clinux.lan test.clinux.lan.crt test.clinux.lan.key --provisioner-password-file=PASSWORD_FILE -f --not-after=10h
+
+### Test certificats
+    step certificate inspect test.clinux.lan 
+    step certificate inspect test.clinux.lan --short
