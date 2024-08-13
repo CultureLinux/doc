@@ -66,13 +66,20 @@ Une fois l'upgrade fait, il faut attendre la fin des background migrations
     
 ## CLI glab
 ### install 
-    wget https://gitlab.com/gitlab-org/cli/-/releases/v1.33.0/downloads/glab_1.33.0_Linux_x86_64.tar.gz
-    tar xvzf glab_1.33.0_Linux_x86_64.tar.gz
+    wget https://gitlab.com/gitlab-org/cli/-/releases/v1.45.0/downloads/glab_1.45.0_Linux_x86_64.tar.gz
+    tar xvzf glab_*_Linux_x86_64.tar.gz
     mv bin/glab /usr/local/bin/
 
 ### Login 
     glab auth login --hostname gitlab.fqdn --stdin < ~/.gitlab.token
 
+### Clean pipelines
+```
+    glab ci delete --status success --repo git.clinux.lan/GROUP/REPO
+```
+```
+    docker exec --user git -it sameersbn-gitlab-gitlab-1 bundle exec rake gitlab:cleanup:orphan_job_artifact_files DRY_RUN=false RAILS_ENV=production
+```
 ###  Pipeline
 #### list
     glab pipeline list --sort asc
