@@ -1,5 +1,5 @@
 # Icinga
-## Install
+## Install (server)
 ### RHEL
 #### Repository
     dnf install epel-release
@@ -48,10 +48,7 @@
     icingacli setup token create
     http://192.168.1.9/icingaweb2/setup
 
-## Zones 
-### Zone master (server icinga)
-    icinga node wizard
-
+## Cients 
 ### Agent/Satellite (direct acces to icinga server)
 #### Node
 - Agent/Satellite : Y
@@ -117,12 +114,154 @@ Done.
 
 Now restart your Icinga 2 daemon to finish the installation!
 ```
-#### Server
+
+### Agent/Satellite (no acces to icinga server)
+#### On node
+```
+root@proxmox:~# icinga2 node wizard
+Welcome to the Icinga 2 Setup Wizard!
+
+We will guide you through all required configuration details.
+
+Please specify if this is an agent/satellite setup ('n' installs a master setup) [Y/n]:
+
+Starting the Agent/Satellite setup routine...
+
+Please specify the common name (CN) [proxmox.clinux.lan]: proxmox.clinux.lan
+
+Please specify the parent endpoint(s) (master or satellite) where this node should connect to:
+Master/Satellite Common Name (CN from your master/satellite node): icinga.clinux.lan
+
+Do you want to establish a connection to the parent node from this node? [Y/n]: n
+Connection setup skipped. Please configure your parent node to
+connect to this node by setting the 'host' attribute for the node Endpoint object.
+
+Add more master/satellite endpoints? [y/N]:
+
+No connection to the parent node was specified.
+
+Please copy the public CA certificate from your master/satellite
+into '/var/lib/icinga2/certs//ca.crt' before starting Icinga 2.
+Please specify the API bind host/port (optional):
+Bind Host []:
+Bind Port []:
+
+Accept config from parent node? [y/N]: Y
+Accept commands from parent node? [y/N]: Y
+
+Reconfiguring Icinga...
+Disabling feature notification. Make sure to restart Icinga 2 for these changes to take effect.
+Enabling feature api. Make sure to restart Icinga 2 for these changes to take effect.
+
+Local zone name [proxmox.clinux.lan]:
+Parent zone name [master]:
+
+Default global zones: global-templates director-global
+Do you want to specify additional global zones? [y/N]:
+
+Do you want to disable the inclusion of the conf.d directory [Y/n]:
+Disabling the inclusion of the conf.d directory...
+
+Done.
+
+Now restart your Icinga 2 daemon to finish the installation!
+
+```
+#### On server
+```
+cd /var/lib/icinga2/certs
+icinga2 pki new-cert --cn proxmox.clinux.lan --key /var/lib/icinga2/certs/proxmox.clinux.lan.key --csr /var/lib/icinga2/certs/proxmox.clinux.lan.csr
+icinga2 pki sign-csr --cert /var/lib/icinga2/certs/proxmox.clinux.lan.crt --csr /var/lib/icinga2/certs/proxmox.clinux.lan.csr
+rm -fv /var/lib/icinga2/certs/proxmox.clinux.lan.csr
+scp {ca.crt,proxmox.clinux.lan*} root@proxmox.clinux.lan:/var/lib/icinga2/certs/
 ```
 
 ```
-### Agent (no acces to icinga server)
+object Endpoint "proxmox.clinux.lan" {
+   host = "proxmox.clinux.lan"
+}
 
-### Satellite (no acces to icinga server)
+object Zone "proxmox.clinux.lan" {
+     endpoints = [ "proxmox.clinux.lan" ]
+     parent = "master"
+}
 
+object Host "proxmox.clinux.lan" {
+   import "generic-host"
+   address = "proxmox.clinux.lan"
+   vars.client_endpoint = name
+}
+```
+
+```
+systemctl restart icinga2.service
+```
+#### On node (again)
+```
+systemctl restart icinga2.service
+```
 ### Agent via satellite (no acces to icinga server)
+
+```
+[root@docker ~]# icinga2 node wizard
+Welcome to the Icinga 2 Setup Wizard!
+
+We will guide you through all required configuration details.
+
+Please specify if this is an agent/satellite setup ('n' installs a master setup) [Y/n]:
+
+Starting the Agent/Satellite setup routine...
+
+Please specify the common name (CN) [agent.clinux.lan]:
+
+Please specify the parent endpoint(s) (master or satellite) where this node should connect to:
+Master/Satellite Common Name (CN from your master/satellite node): proxmox.clinux.lan
+
+Do you want to establish a connection to the parent node from this node? [Y/n]:
+Please specify the master/satellite connection information:
+Master/Satellite endpoint host (IP address or FQDN): 192.168.77.1
+Master/Satellite endpoint port [5665]:
+
+Add more master/satellite endpoints? [y/N]:
+Parent certificate information:
+
+ Version:             3
+ Subject:             CN = proxmox.clinux.lan
+ Issuer:              CN = Icinga CA
+ Valid From:          Aug 13 07:00:34 2024 GMT
+ Valid Until:         Sep 14 07:00:34 2025 GMT
+ Serial:              10:39:45:87:8e:72:c6:89:d5:80:6b:23:38:1d:7d:ff:a8:f4:54:5e
+
+ Signature Algorithm: sha256WithRSAEncryption
+ Subject Alt Names:   proxmox.clinux.lan
+ Fingerprint:         A5 2E E6 6F 65 5F 61 92 89 FE E3 F2 14 0D EE AD BA A7 D8 BA CD 74 D9 AA 7F 1C 01 6A C4 1A C4 46
+
+Is this information correct? [y/N]: Y
+
+Please specify the request ticket generated on your Icinga 2 master (optional).
+ (Hint: # icinga2 pki ticket --cn 'agent.clinux.lan'): 4caf71b792b2acdf23d238033b84cac190983290
+Please specify the API bind host/port (optional):
+Bind Host []:
+Bind Port []:
+
+Accept config from parent node? [y/N]: Y
+Accept commands from parent node? [y/N]: Y
+
+Reconfiguring Icinga...
+
+Local zone name [agent.clinux.lan]:
+Parent zone name [master]:
+
+Default global zones: global-templates director-global
+Do you want to specify additional global zones? [y/N]:
+
+Do you want to disable the inclusion of the conf.d directory [Y/n]:
+Disabling the inclusion of the conf.d directory...
+
+Done.
+
+Now restart your Icinga 2 daemon to finish the installation!
+```
+```
+systemctl restart icinga2.service
+```
