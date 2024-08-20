@@ -27,16 +27,20 @@
     apt install icinga2 
 
 ## icingaweb2 
-### package 
+### package RHEL
     dnf install icingaweb2 icingaweb2-selinux mariadb mariadb-server mariadb-server-utils icinga2-ido-mysql httpd php-pecl-imagick
+### package Debian
+    apt install mariadb-server 
+    apt install icingaweb2 php8.2-imagick icinga2-ido-mysql
 ### db
     systemctl enable mariadb.service --now
     mariadb-secure-installation
     mariadb -u root -p
         CREATE DATABASE icinga2;
         CREATE DATABASE icingaweb2;
-        GRANT ALL PRIVILEGES ON icinga2.* TO 'icinga2_user'@'localhost' IDENTIFIED BY 'pwd';
-        GRANT ALL PRIVILEGES ON icingaweb2.* TO 'icingaweb2_user'@'localhost' IDENTIFIED BY 'pwd';
+        use mysql ;
+        GRANT ALL PRIVILEGES ON icinga2.* TO 'icinga2'@'localhost' IDENTIFIED BY 'icinga2';
+        GRANT ALL PRIVILEGES ON icingaweb2.* TO 'icingaweb2'@'localhost' IDENTIFIED BY 'icingaweb2';
         FLUSH PRIVILEGES;
     mariadb icinga2 < /usr/share/icinga2-ido-mysql/schema/mysql.sql
 ## Setup 

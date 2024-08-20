@@ -1,5 +1,10 @@
 # Storage 
 ## Increase 
+### Standard
+    growpart /dev/sda 3
+    resize2fs /dev/sda3  #ext4
+    xfs_growfs /dev/vda4 #xfs
+### LVM
     parted /dev/sda 
     show
     resizepart 2 100%

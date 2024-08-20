@@ -5,7 +5,7 @@
     # nft list ruleset
 ## Save 
     # nft list ruleset >> /etc/nftables.conf
-## Save 
+## Flush 
     # nft -f /etc/nftables.conf    
 ## Basic ssh,http,https
     nft add table inet firewall
