@@ -23,5 +23,7 @@ jobs:
           SSH_USER: ${{ secrets.SSH_USER }}
           SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           SSH_HOST: ${{ secrets.SSH_HOST }}
-      - name: Get info
+      - name: get id
         run: ssh staging 'id'        
+      - name: get pwd
+        run: ssh staging 'pwd'        
