@@ -63,13 +63,14 @@
 
 ## Restore
 Installer la meme version de gitlab que celle du backup à restorer
+```
     gitlab-ctl stop puma
     gitlab-ctl stop sidekiq
     gitlab-ctl status
     gitlab-backup restore BACKUP=11493107454_2018_04_25_10.6.4-ce
     gitlab-ctl restart
     gitlab-rake gitlab:check SANITIZE=true
-
+```
 ## Upgrade 
     gitlab-rake gitlab:check
     gitlab-rake gitlab:doctor:secrets
