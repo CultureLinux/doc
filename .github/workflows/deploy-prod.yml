@@ -25,7 +25,11 @@ jobs:
           SSH_USER: ${{ secrets.SSH_USER }}
           SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           SSH_HOST: ${{ secrets.SSH_HOST }}
-      - name: get id
-        run: ssh staging 'id'        
-      - name: get pwd
-        run: ssh staging 'pwd'        
+#      - name: get id
+#        run: ssh staging 'id'        
+#      - name: get pwd
+#        run: ssh staging 'pwd'        
+      - name: pull new change 
+        run: ssh staging 'cd doc && git pull'                
+      - name: rebuild site 
+        run: ssh staging 'cd doc && rm -rf site && . venv/bin/activate ; mkdocs build'               
