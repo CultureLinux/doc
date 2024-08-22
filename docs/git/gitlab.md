@@ -32,10 +32,27 @@
 
 ## Setup (omnibus)
 ### Url
+```
     vi /etc/gitlab/gitlab.rb
     external_url 'http://gitlab.culturelinux.lan'
+```
+```
     gitlab-ctl reconfigure
     gitlab-ctl status
+```
+### Url https
+```
+    vi /etc/gitlab/gitlab.rb
+    external_url 'https://gitlab.local.clinux.fr'  
+    nginx['enable'] = true
+    nginx['redirect_http_to_https'] = true
+    nginx['ssl_certificate'] = "/etc/gitlab/ssl/_.local.clinux.fr.crt"
+    nginx['ssl_certificate_key'] = "/etc/gitlab/ssl/_.local.clinux.fr.key"
+```
+```
+    gitlab-ctl reconfigure
+    gitlab-ctl status
+```
 ### root account
     cat /etc/gitlab/initial_root_password
 
@@ -56,9 +73,7 @@ Installer la meme version de gitlab que celle du backup à restorer
 ## Upgrade 
     gitlab-rake gitlab:check
     gitlab-rake gitlab:doctor:secrets
-    gitlab-ctl stop
     dnf upgrade
-    gitlab-ctl start
 
 Une fois l'upgrade fait, il faut attendre la fin des background migrations
 ## CICD
