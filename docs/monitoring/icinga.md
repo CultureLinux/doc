@@ -330,6 +330,55 @@ apt install grafana
 systemctl enable grafana-server --now
 ```
 
-#### dashboard
+#### datasource
 * Datasource > new  : URL + Organization + Token + Bucket
+#### Import
 * Import dashboard : https://grafana.com/grafana/dashboards/15361-icinga2-with-influxdb/
+#### Create visualization
+```
+from(bucket: "icinga2")
+  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)
+  |> filter(fn: (r) =>
+    r._measurement == "ping4" and
+    r._field == "value" and
+    r.hostname == "${hostname}"
+  )
+  |> map(fn: (r) => ({ _value:r._value, _time:r._time, _field: r.metric }))
+```
+
+
+## Checks
+### Command 
+```
+cd /usr/lib/nagios/plugins
+wget https://raw.githubusercontent.com/justintime/nagios-plugins/master/check_mem/check_mem.pl
+chmod +x check_mem.pl
+```
+```
+object CheckCommand  "check_memory" {
+    import "plugin-check-command"
+    command = [PluginDir + "/check_mem.pl"]
+    arguments = {
+       "-f" = ""
+       "-C" = ""
+       "-w" = { value = "$memory_wfree$" }
+       "-c" = { value = "$memory_cfree$" }
+   }
+}
+```
+
+### Service
+```
+apply Service "memory" {
+  import "generic-service"
+  check_command = "check_memory"
+
+  if(! host.vars.memory_wfree){
+    vars.memory_wfree = 20
+  }
+  if(! host.vars.memory_cfree){
+    vars.memory_cfree = 10
+  }  
+  assign where host.address
+}
+```
