@@ -333,15 +333,3 @@ systemctl enable grafana-server --now
 #### dashboard
 * Datasource > new  : URL + Organization + Token + Bucket
 * Import dashboard : https://grafana.com/grafana/dashboards/15361-icinga2-with-influxdb/
-
-
-### Icingaweb2 
-```
-cd /usr/share/icingaweb2/modules/
-wget https://github.com/Mikesch-mp/icingaweb2-module-grafana/archive/refs/tags/v2.0.3.tar.gz
-tar xvzf v2.0.3.tar.gz
-wget https://github.com/Icinga/icinga-php-library/archive/refs/tags/v0.14.1.tar.gz
-tar xvzf v0.14.1.tar.gz
-wget https://github.com/Icinga/icingadb/archive/refs/tags/v1.2.0.tar.gz
-tar xvzf v1.2.0.tar.gz
-```
