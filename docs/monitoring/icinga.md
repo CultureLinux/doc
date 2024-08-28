@@ -269,3 +269,67 @@ Now restart your Icinga 2 daemon to finish the installation!
 ```
 systemctl restart icinga2.service
 ```
+
+## Observability 
+### Master
+```
+icinga2 feature enable influxdb2
+```
+### Influxdb2
+* Load Data > create bucket : icinga2
+* Load Data > api token RW : -------------------
+
+### Master
+```
+vi /etc/icinga2/features-enabled/influxdb2.conf
+```    
+```
+/**
+ * The Influxdb2Writer type writes check result metrics and
+ * performance data to an InfluxDB v2 HTTP API
+ */
+
+object Influxdb2Writer "influxdb2" {
+  host = "$INFLUXDB_HOST"
+  port = 8086
+  organization = "$ORGANISATION"
+  bucket = "$BUCKET_NAME"
+  auth_token = "$API_TOKEN_RW"
+  flush_threshold = 1024
+  flush_interval = 10s
+  host_template = {
+    measurement = "$host.check_command$"
+    tags = {
+      hostname = "$host.name$"
+    }
+  }
+  service_template = {
+    measurement = "$service.check_command$"
+    tags = {
+      hostname = "$host.name$"
+      service = "$service.name$"
+    }
+  }
+}
+```    
+
+```
+systemctl restart icinga2.service
+```
+
+
+###  Grafana 
+#### Install
+
+```
+wget -q -O /usr/share/keyrings/grafana.key https://packages.grafana.com/gpg.key
+echo "deb [signed-by=/usr/share/keyrings/grafana.key] https://packages.grafana.com/oss/deb stable main" | tee -a /etc/apt/sources.list.d/grafana.list
+apt update
+apt install grafana
+
+systemctl enable grafana-server --now
+```
+
+#### dashboard
+* Datasource > new  : URL + Organization + Token + Bucket
+* Import dashboard : https://grafana.com/grafana/dashboards/15361-icinga2-with-influxdb/

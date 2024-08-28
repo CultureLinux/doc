@@ -1,5 +1,5 @@
 # Grafana
-## Install
+## Install RHEL
 ### Repository
 ```
 cat <<EOF | tee /etc/yum.repos.d/grafana.repo
@@ -24,3 +24,22 @@ EOF
     firewall-cmd --add-port=3000/tcp --permanent
     firewall-cmd --reload
     firewall-cmd --list-ports   
+
+## Change url
+### grafana.ini   
+```
+vi /etc/grafana/grafana.ini
+```
+```
+...
+domain = grafana.local.clinux.fr
+...
+```
+### nginx
+```
+location / {
+    proxy_set_header Host grafana.local.clinux.fr;
+    proxy_set_header Origin https://grafana.local.clinux.fr;
+    proxy_pass http://localhost:3000;
+}
+```  
