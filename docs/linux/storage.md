@@ -85,6 +85,14 @@ iscsiadm -m session -o show
 lsscsi
 ```
 
+### automatic start
+```sh
+vi /etc/iscsi/nodes/************/default
+node.startup=automatic 
+lsscsi --transport
+```
+
+
 ## At boot
 ### samba/cifs
 ```sh
