@@ -85,6 +85,14 @@ iscsiadm -m session -o show
 lsscsi
 ```
 
+### automatic start
+```sh
+vi /etc/iscsi/nodes/************/default
+node.startup=automatic 
+lsscsi --transport
+```
+
+
 ## At boot
 ### samba/cifs
 ```sh
@@ -118,3 +126,5 @@ password=SMBpassword
     vi /etc/sysctl.conf
     vm.swappiness=10
     sysctl -p
+### Troubleshoot
+    apt install smem
