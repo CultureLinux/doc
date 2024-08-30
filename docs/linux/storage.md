@@ -126,3 +126,5 @@ password=SMBpassword
     vi /etc/sysctl.conf
     vm.swappiness=10
     sysctl -p
+### Troubleshoot
+    apt install smem
