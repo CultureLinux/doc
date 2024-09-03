@@ -348,6 +348,14 @@ from(bucket: "icinga2")
 
 
 ## Checks
+### Plugin
+```
+#!/bin/bash
+echo "New plugin"
+exit 0 # OK
+exit 1 # WARNING
+exit 2 # CRITICAL
+```
 ### Command 
 ```
 cd /usr/lib/nagios/plugins
