@@ -20,7 +20,7 @@
     
     iptables -I FORWARD 1 -m state -s 192.168.2.0/24 -d 192.168.77.0/24 --state NEW,RELATED,ESTABLISHED -j ACCEPT
 
-## Default deny (warning can lock if nothind configured)
+## Default deny (warning can lock if nothing configured)
     iptables -A INPUT -j DROP
 
 ## Delete 
