@@ -70,6 +70,10 @@ ifreload -a
 
 ### PAT ssh to VM
     iptables -t nat -A PREROUTING -p tcp --dport 122 -j DNAT --to-destination 192.168.77.121:22
+### PAT scp 
+     scp -o ProxyJump=jumper@proxmox local_file root@192.168.77.121:/dest_path
+### PAT rsync 
+    rsync -azvP -e "ssh -J jumper@proxmox" local_file root@192.168.77.121:/dest_path 
 
 ## Build template
 ### get qcow image
