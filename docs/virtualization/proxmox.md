@@ -96,6 +96,14 @@ ifreload -a
     growpart /dev/sda 1
     resize2fs /dev/sda1 
 
+## Shrink HD
+### Proxmox (only SCSI)
+    Activate Discard option on HD
+### RHEL
+    systemctl enable fstrim.timer --now
+    systemctl status fstrim.timer
+### Qcow/LVM
+    fstrim -v /
 
 ## Cli management
 ### List storage
