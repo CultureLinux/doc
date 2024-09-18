@@ -56,7 +56,7 @@
     icinga2 api setup
     service icinga2 restart
     netstat -tnlpv | grep 5665
-
+    openssl x509 -noout -text -in /var/lib/icinga2/certs/ca.crt
 ## Clients 
 ### Agent/Satellite (direct acces to icinga server)
 #### Node
