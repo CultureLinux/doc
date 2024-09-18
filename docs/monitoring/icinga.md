@@ -51,8 +51,13 @@
 ### Webui
     icingacli setup token create
     http://192.168.1.9/icingaweb2/setup
+### Api
+    icinga2 feature enable api
+    icinga2 api setup
+    service icinga2 restart
+    netstat -tnlpv | grep 5665
 
-## Cients 
+## Clients 
 ### Agent/Satellite (direct acces to icinga server)
 #### Node
 - Agent/Satellite : Y
