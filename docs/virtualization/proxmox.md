@@ -4,32 +4,32 @@
 ### Install
     apt install iptables iptables-persistent
 ### Reset all rules 
-```
-iptables -P INPUT ACCEPT
-iptables -P FORWARD ACCEPT
-iptables -P OUTPUT ACCEPT
 
-iptables -F
+    iptables -P INPUT ACCEPT
+    iptables -P FORWARD ACCEPT
+    iptables -P OUTPUT ACCEPT
 
-iptables -X
+    iptables -F
 
-iptables -Z 
+    iptables -X
 
-iptables -t nat -F
-iptables -t nat -X
-iptables -t mangle -F
-iptables -t mangle -X
-iptables -t raw -F
-iptables -t raw -X
-```
+    iptables -Z 
+
+    iptables -t nat -F
+    iptables -t nat -X
+    iptables -t mangle -F
+    iptables -t mangle -X
+    iptables -t raw -F
+    iptables -t raw -X
+
 ### Setup minimal rules
 ```
-iptables -A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
-iptables -A INPUT -i lo -j ACCEPT
-iptables -A INPUT -p tcp -m tcp --dport 22 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
-iptables -A INPUT -p tcp -m tcp --dport 8006 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
-iptables -A INPUT -j DROP
-iptables -A OUTPUT -o lo -j ACCEPT
+    iptables -A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+    iptables -A INPUT -i lo -j ACCEPT
+    iptables -A INPUT -p tcp -m tcp --dport 22 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
+    iptables -A INPUT -p tcp -m tcp --dport 8006 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
+    iptables -A INPUT -j DROP
+    iptables -A OUTPUT -o lo -j ACCEPT
 ```
 ```
 iptables-save > /etc/iptables/rules.v4
@@ -70,6 +70,10 @@ ifreload -a
 
 ### PAT ssh to VM
     iptables -t nat -A PREROUTING -p tcp --dport 122 -j DNAT --to-destination 192.168.77.121:22
+### PAT scp 
+     scp -o ProxyJump=jumper@proxmox local_file root@192.168.77.121:/dest_path
+### PAT rsync 
+    rsync -azvP -e "ssh -J jumper@proxmox" local_file root@192.168.77.121:/dest_path 
 
 ## Build template
 ### get qcow image
@@ -92,6 +96,14 @@ ifreload -a
     growpart /dev/sda 1
     resize2fs /dev/sda1 
 
+## Shrink HD
+### Proxmox (only SCSI)
+    Activate Discard option on HD
+### RHEL
+    systemctl enable fstrim.timer --now
+    systemctl status fstrim.timer
+### Qcow/LVM
+    fstrim -v /
 
 ## Cli management
 ### List storage

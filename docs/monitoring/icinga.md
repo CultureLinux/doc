@@ -51,8 +51,14 @@
 ### Webui
     icingacli setup token create
     http://192.168.1.9/icingaweb2/setup
-
-## Cients 
+### Api
+    icinga2 feature enable api
+    icinga2 api setup
+    echo "const TicketSalt = \"$(openssl rand -base64 30)\"" >> /etc/icinga2/constants.conf
+    service icinga2 restart
+    netstat -tnlpv | grep 5665
+    openssl x509 -noout -text -in /var/lib/icinga2/certs/ca.crt
+## Clients 
 ### Agent/Satellite (direct acces to icinga server)
 #### Node
 - Agent/Satellite : Y
