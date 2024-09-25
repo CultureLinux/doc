@@ -92,6 +92,13 @@ node.startup=automatic
 lsscsi --transport
 ```
 
+### logout
+Logout from iSCSI targets.
+```sh
+iscsiadm --mode node --target ${IQN} --portal ${IP/DNS} --logout
+iscsiadm --mode node --logoutall=all
+```
+
 
 ## At boot
 ### samba/cifs
