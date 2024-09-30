@@ -59,3 +59,7 @@
     git reset COMMIT
     git reset COMMIT(old)
     git reset --hard COMMIT
+
+## Medium
+### change remote
+    git remote set-url origin ssh://git@localhost:10022/GROUP/PROJECT.git
