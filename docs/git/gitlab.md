@@ -77,9 +77,22 @@ Installer la meme version de gitlab que celle du backup à restorer
     dnf upgrade
 
 Une fois l'upgrade fait, il faut attendre la fin des background migrations
-## CICD
-### Register runner
+
+## CI-CD
+### Install runner 
+    curl -L --output /usr/local/bin/gitlab-runner "https://s3.dualstack.us-east-1.amazonaws.com/gitlab-runner-downloads/latest/binaries/gitlab-runner-linux-amd64"
+    chmod +x /usr/local/bin/gitlab-runner
+    useradd --comment 'GitLab Runner' --create-home gitlab-runner --shell /bin/bash
+    gitlab-runner install --user=gitlab-runner --working-directory=/home/gitlab-runner
+    gitlab-runner start
+### Register (v17.x)
+#### webui
+* https://git.local.clinux.fr/admin/runners/new    
+* Add tag (my-cd-tag)
+#### runner 
     
+
+
 ## CLI glab
 ### install 
     wget https://gitlab.com/gitlab-org/cli/-/releases/v1.45.0/downloads/glab_1.45.0_Linux_x86_64.tar.gz
