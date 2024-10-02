@@ -202,3 +202,32 @@ Attention la version du protocole est 3
 ```
     Save  $TOKEN
 ```
+
+## Windows
+### Get iso
+[Win11 Eval](https://www.microsoft.com/fr-fr/evalcenter/download-windows-11-enterprise)
+### Get drivers iso
+[Driver](https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win.iso)
+### Create VM 
+#### OS
+* Type : Microsoft Windows
+* Version : 11/2022/2025
+* Add additionnal drive for Virtio drivers
+#### System 
+* EFI storage 
+* Add TPM
+#### Disk
+* SSD emulation
+* Cache : writeback
+* Discard : yes
+* IOthread : yes
+  
+### Load drivers 
+* vioscsi
+* NetKVM
+* Balloon
+
+### Trimm
+* Disk/Properties/Optimize
+* optimize-volume -drive c -verbose -retrim
+
