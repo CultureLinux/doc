@@ -3,8 +3,7 @@
 ### RHEL
 #### Repository
     dnf install epel-release
-    rpm --import https://packages.freedom-for-icinga.com/free-icinga.key
-    curl https://packages.freedom-for-icinga.com/epel/FREE-ICINGA-release.repo -o /etc/yum.repos.d/FREE-ICINGA-release.repo 
+    curl https://icinga.repo.clinux.fr/icinga2.repo -o /etc/yum.repos.d/icinga2-clinux.repo 
 #### Packages
     dnf install icinga2 icinga2-selinux icinga2-bin icingacli
     dnf install nagios-plugins-{load,http,users,procs,disk,swap,nrpe,uptime,dns,ssh,tcp,ping,mysql}
