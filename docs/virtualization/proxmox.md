@@ -234,8 +234,16 @@ Attention la version du protocole est 3
 ## Notifications
 ### Variables
 
-### Webhook 
-#### Mattermost
+```
+{{ title }}: The rendered notification title
+{{ message }}: The rendered notification body
+{{ severity }}: The severity of the notification (info, notice, warning, error, unknown)
+{{ timestamp }}: The notification’s timestamp as a UNIX epoch (in seconds).
+{{ fields.hostname }}: Hostname, without domain (e.g. pve1)
+{{ fields.type }}: Type of job
+```
+
+### Mattermost
 * Headers 
 ```
 Content-Type : application/json
