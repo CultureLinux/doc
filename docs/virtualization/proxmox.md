@@ -244,6 +244,9 @@ Attention la version du protocole est 3
 ```
 
 ### Mattermost
+
+[Create webhook](https://developers.mattermost.com/integrate/webhooks/incoming/)
+
 * Headers 
 ```
 Content-Type : application/json
