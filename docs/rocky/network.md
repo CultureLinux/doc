@@ -6,7 +6,7 @@
 ## Rocky 9
 ### New file config
 ```
-/etc/sysconfig/network-scripts/ens18.nmconnection
+/etc/NetworkManager/system-connections/eth0.nmconnection
 ```
 ```
 [connection]
@@ -33,7 +33,7 @@ method=auto
 
 ### disable ipv6
 ```
-/etc/sysconfig/network-scripts/ens18.nmconnection
+/etc/NetworkManager/system-connections/eth0.nmconnection
 ```
 ```
 [ipv6]

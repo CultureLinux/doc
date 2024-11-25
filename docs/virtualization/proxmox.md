@@ -231,3 +231,34 @@ Attention la version du protocole est 3
 * Disk/Properties/Optimize
 * optimize-volume -drive c -verbose -retrim
 
+## Notifications
+### Variables
+
+### Webhook 
+#### Mattermost
+* Headers 
+```
+Content-Type : application/json
+```
+* Body
+```
+{
+  "username": "hal-9000",
+  "icon_url": "https://domain.com/image.png",
+  "attachments": [
+    {
+      "fallback": "Résumé pour les clients qui ne supportent pas la mise en forme.",
+      "color": "#36a64f",
+      "title": "{{ severity }} - {{ title }}",
+      "fields": [
+        {
+          "title": "{{ fields.type }}",
+          "value": "{{ message }}",
+          "short": true
+        }
+      ],
+      "footer": "{{ fields.hostname }}"
+    }
+  ]
+}
+```
