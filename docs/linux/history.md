@@ -69,14 +69,14 @@ $ source ~/.bashrc
 
 ## Aide ⚙️
 
-### Alias 
+### Alias court
 Ajoute l'alias `h` pour appeler `history`
 ```sh
 $ echo "alias h='history'" >> ~/.bashrc   
 $ source ~/.bashrc
 ```
 
-### Alias 
+### Recherche courte 
 Ajoute la fonction `hg` pour rechercher dans l'historique
 ```sh
 $ echo "function hg (){
