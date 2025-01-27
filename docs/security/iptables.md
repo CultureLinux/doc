@@ -30,7 +30,9 @@
 ### by line number
     iptables -L --line-numbers
     iptables -D INPUT 5
-
+### by line number for nat 
+    iptables -t nat -D PREROUTING 5
+    
 ## PAT
 ### Create 
     iptables -t nat -A PREROUTING -p tcp --dport 27027 -j DNAT --to-destination 192.168.77.20:27017

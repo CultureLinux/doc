@@ -1,67 +1,86 @@
-# History
-This section provides an overview of commands and configurations related to the command history in a Unix/Linux shell.
+#  Historique 📜
+Cette section fournit un aperçu des commandes et configurations liées à l'historique des commandes dans un shell Unix/Linux. 💻
 
-## View
-This subsection explains how to view and search through the command history.
+## Afficher 👀
+Cette sous-section explique comment afficher et rechercher dans l'historique des commandes. 🔍
 
-### list
-Lists all previously executed commands.
+
+### Lister 📋
+Affiche toutes les commandes exécutées précédemment.
 ```sh
 $ history
 ```
 
-### search all
-Explains how to search for specific commands in the history using `grep` and shortcuts.
+### rechercher tout 🔎
+Explique comment rechercher des commandes spécifiques dans l'historique à l'aide de grep et de raccourcis.
 ```sh
 $ history | grep sudo
 $ !sudo:p 
 $ !18:p
 ```
 
-### search interactive
-Describes how to use interactive search to find commands in the history.
+### Recherche interactive 🕵️‍♂️
+Décrit comment utiliser la recherche interactive pour trouver des commandes dans l'historique. 
 ```sh
 Ctrl + R  
 ```
 
-## Action
-This subsection covers the actions that can be performed on the command history.
+## Action ⚙️
+Cette sous-section couvre les actions pouvant être effectuées sur l'historique des commandes. 🔧
 
-### execute
-Shows how to re-execute specific commands from the history.
+### Exécuter ▶️
+Montre comment réexécuter des commandes spécifiques de l'historique.
 ```sh
 $ !sudo
 $ !18
 ```
 
-### clean history
-Explains how to clear the command history.
+### Nettoyer l'historique 🧹
+Explique comment effacer l'historique des commandes.
 ```sh
 $ history -cw
 $ > ~/.bash_history
 ```
 
-## config
-This subsection details the possible configurations for the command history.
+## Config ⚙️
+Cette sous-section détaille les configurations possibles pour l'historique des commandes. 🛠️
 
-### Add timestamp
-Indicates how to add a timestamp to each command in the history.
+### Ajouter un horodatage ⏰
+Indique comment ajouter un horodatage à chaque commande dans l'historique.
 ```sh
 $ echo "export HISTTIMEFORMAT='%F, %T '" >> ~/.bashrc
 $ source ~/.bashrc
 ```
 
-### Increase history length (default 1000)
-Explains how to increase the default command history length.
+### Augmenter la longueur de l'historique (par défaut 1000) 🔝
+Explique comment augmenter la longueur par défaut de l'historique des commandes.
 ```sh
 $ echo "HISTSIZE=10000" >> ~/.bashrc
 $ echo "HISTFILESIZE=10000" >> ~/.bashrc    
 $ source ~/.bashrc
 ```
 
-### Direct write to history
-Shows how to configure direct writing of commands to the history file.
+### Écriture directe dans l'historique 📝
+Montre comment configurer l'écriture directe des commandes dans le fichier d'historique.
 ```sh
 $ echo "PROMPT_COMMAND='history -a'" >> ~/.bashrc   
+$ source ~/.bashrc
+```
+
+## Aide ⚙️
+
+### Alias 
+Ajoute l'alias `h` pour appeler `history`
+```sh
+$ echo "alias h='history'" >> ~/.bashrc   
+$ source ~/.bashrc
+```
+
+### Alias 
+Ajoute la fonction `hg` pour rechercher dans l'historique
+```sh
+$ echo "function hg (){
+    history | grep $^1
+}" >> ~/.bashrc   
 $ source ~/.bashrc
 ```
