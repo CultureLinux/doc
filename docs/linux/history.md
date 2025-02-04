@@ -67,6 +67,13 @@ $ echo "PROMPT_COMMAND='history -a'" >> ~/.bashrc
 $ source ~/.bashrc
 ```
 
+### NE PAS écrire dans l'historique 📝
+Montre comment configurer l'écriture directe des commandes dans le fichier d'historique.
+```sh
+$ echo "HISTCONTROL='ignoreboth:erasedups'" >> ~/.bashrc   
+$ source ~/.bashrc
+```
+
 ## Aide ⚙️
 
 ### Alias court

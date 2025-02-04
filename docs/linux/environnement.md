@@ -1,10 +1,10 @@
-# Bash
-## Alias
+# 🌐️ Bash
+## 📝 Alias
 
-### List
+### 📄 List
     $ alias
 
-### shell
+### 🔧 shell
     alias cp='cp -i'
     alias dfg='df -h'
     alias dus='du -ms $(ls -A)'
@@ -19,7 +19,7 @@
     alias mv='mv -i'
     alias nets='netstat -tnlpv'
 
-### Git
+### 🚀 Git
     alias g.='git add . -A'
     alias g.c='git add . -A && gc'
     alias gba='git branch -a'
