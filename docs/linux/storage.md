@@ -1,107 +1,139 @@
 # Storage
-This section provides an overview of commands and configurations related to disk storage management.
+Cette section fournit une vue d'ensemble des commandes et des configurations relatives au gestionnaire de stockage disque.
 
-## Rescan disk without bootting
+## Re-scan le disque sans démarrer 🔄
     echo "- - -" | tee /sys/class/scsi_host/host*/scan
 
-## Rescue disk 
+## Secourir le disque 🚨
     dd if=/dev/sdc of=/home/mako/damaged_P300_disk.img bs=64K conv=noerror,sync
 
-## Disk extension
-This subsection explains how to check and extend disk partitions.
+## Extension de disque 💾
+Cette sous-section explique comment vérifier et étendre les partitions disques.
 
-### check
-Checks the current disk and partition sizes.
+### Vérification 📊
+Vérifie la taille actuelle du disque et des partitions.
 ```sh
 lsblk
 ```
-Output example:
+Exemple de sortie :
+
 ```sh
 NAME    MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS
 sdb       8:16   0  110G  0 disk
 └─sdb1    8:17   0  100G  0 part /rsync
 ```
 
-### extend partition
-Explains how to extend the partition size.
+### Étendre la partition 🔄
+Explique comment étendre la taille de la partition.
+
 ```sh
-growpart -N /dev/sdb 1
+growpart -N /dev/sdb 1  #dry-run
 growpart /dev/sdb 1
 ```
-Checks the updated partition sizes.
+Vérifie les nouvelles tailles des partitions.
 ```sh
 lsblk
 ```
-Output example:
+Exemple de sortie :
 ```sh
 NAME    MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS
 sdb       8:16   0  110G  0 disk
 └─sdb1    8:17   0  110G  0 part /rsync
 ```
-Checks the file system disk space usage.
+
+#### Vérifie l'utilisation du disque de stockage 📈.
+
 ```sh
 df -h
 ```
-Output example:
+Exemple de sortie :
 ```sh
 Filesystem      Size  Used Avail Use% Mounted on
 /dev/sdb1        98G   24K   93G   1% /rsync
 ```
-Resizes the file system to use the extended partition space.
+
+#### FS standard
+
+Réajuste le système de fichiers pour utiliser l'espace alloué à la partition étendue 🔁.
 ```sh
 resize2fs /dev/sdb1
 ```
-Checks the updated file system disk space usage.
+Vérifie les nouvelles utilisations du disque de stockage 📈.
 ```sh
 Filesystem      Size  Used Avail Use% Mounted on
 /dev/sdb1       108G   24K  103G   1% /rsync
 ```
 
+#### LVM
+```sh
+parted /dev/sda 
+show
+resizepart 2 100%
+
+fdisk -l 
+pvs
+pvresize /dev/sda2
+pvs
+
+lvs
+lvextend -l +100%Free /dev/mapper/rl-root
+lvs
+
+xfs_growfs /dev/mapper/rl-root
+df -h
+```
+
 ## ISCSI
-This subsection covers the installation and management of iSCSI targets.
+Cette sous-section traite de l'installation et du gérer les portes d'accès iSCSI.
 
 ### Install
-Installs the necessary packages for iSCSI.
+Installe les paquets nécessaires pour iSCSI.
 ```sh
 apt -y install open-iscsi lsscsi
 ```
 
-### list
-Discovers available iSCSI targets from the specified IP/DNS.
+### Découverte 🔍
+Découvre les targets iSCSI disponibles à partir de l'IP/DNS spécifié 💻.
+
 ```sh
 iscsiadm -m discovery -t sendtargets -p ${IP/DNS}
 ```
 
-### connect
-Connects to the discovered iSCSI targets.
+### Connexion 🔄
+Se connecte aux targets iSCSI découverts 🚀.
+
 ```sh
 iscsiadm -m node --login
 ```
 
-### show
-Shows the current iSCSI sessions and lists SCSI devices.
+### Affichage 🔍
+Affiche les sessions iSCSI actives et listes des périphériques SCSI 💻.
+
 ```sh
 iscsiadm -m session -o show
 lsscsi
 ```
 
-### automatic start
+### Démarrage automatique 🚀
 ```sh
 vi /etc/iscsi/nodes/************/default
 node.startup=automatic 
 lsscsi --transport
 ```
 
-### logout
-Logout from iSCSI targets.
+### Déconnexion 💥
+Déconnecte des targets iSCSI 🚀.
 ```sh
 iscsiadm --mode node --target ${IQN} --portal ${IP/DNS} --logout
 iscsiadm --mode node --logoutall=all
 ```
 
 
-## At boot
-### samba/cifs
+## Au démarrage ⏩
+### samba/cifs 💻
+
+Installe les paquets nécessaires pour Samba.
+
 ```sh
 apt install  samba-common smbclient samba-common-bin smbclient  cifs-utils
 ```
@@ -115,23 +147,32 @@ password=SMBpassword
 //192.168.1.10/SMB_share_name   /mnt/nas      cifs    uid=0,credentials=/root/.rasp,iocharset=utf8,vers=3.0,noperm,noserverino,nofail  0 0
 ```
 
-## Swap
-### Create
+## Swap 💾
+### Création 🔄
+Crée un fichier swap de 2 Go.
+
     fallocate -l 2G /swap
     chmod 600 /swap
     mkswap /swap
-### Activate
+### Activation
     swapon /swap
     swapon --show
-### Permanent
+### Persistention ⏩
     cp /etc/fstab /etc/fstab.bak
     echo '/swap none swap sw 0 0' | tee -a /etc/fstab
-### Threshold (volatile)
-    cat /proc/sys/vm/swappiness
-    sysctl vm.swappiness=10
-### Threshold (permanent)
+### Seuil (temporaire) 🔁
+
+Vérifie la valeur actuelle du paramètre swapiness.
+```sh
+cat /proc/sys/vm/swappiness
+sysctl vm.swappiness=10
+```
+### Seuil (permanent) ⏩
     vi /etc/sysctl.conf
     vm.swappiness=10
     sysctl -p
-### Troubleshoot
-    apt install smem
+### Diagnostique 🚀
+Installe la commande smem pour surveiller les ressources utilisées.
+```sh
+apt install smem
+```
