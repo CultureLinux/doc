@@ -159,7 +159,7 @@ ifreload -a
 Attention la version du protocole est 3
     Datacenter > Storage > SMB/CIFS
 ### Cli
-    pvesm add cifs syno --server $(IP/DNS) --share $(SHARE NAME) --username $(USERNAME) --password $(PASSWORD)
+    pvesm add cifs syno --server $(IP/DNS) --share $(SHARE NAME) --username $(USERNAME) --password $(PASSWORD) --content images,iso,backup
 
 ## Metric server
 ### influxdb2
