@@ -1,47 +1,53 @@
-# Generate
-This section provides commands for generating and managing SSL certificates using Certbot and Lego.
+# Génération🚀
+Cette section offre des commandes pour générer et gérer des certificats SSL à l'aide de Certbot et Lego.
 
-## certbot
-This subsection explains how to use Certbot for certificate generation, renewal, and deletion.
+## Certbot🔒
+Cette sous-section explique comment utiliser Certbot pour la génération, le renouvellement et la suppression de certificats.
 
-### generate
-Generates a new SSL certificate using Certbot with a dry run to test, followed by the actual generation.
+### Nouveau 🔑
+Génère un nouveau certificat SSL avec Certbot en testant d'abord avec une simulation, puis effectue la génération réelle.
 ```sh
 certbot certonly --agree-tos --email your@email.dom --webroot -w /var/lib/letsencrypt/ -d vhost.email.dom --dry-run
 certbot certonly --agree-tos --email your@email.dom --webroot -w /var/lib/letsencrypt/ -d vhost.email.dom
 ```
 
-### renew
-Renews all the SSL certificates managed by Certbot.
+### Lister 📚
+Liste tous les certificats SSL gérés par Certbot.
+```sh
+certbot certificates
+```
+
+### Renouveler 🔄
+Renouvelle tous les certificats SSL gérés par Certbot.
 ```sh
 certbot renew
 ```
 
-### delete
-Deletes a specific SSL certificate using Certbot.
+### Supprimer 🚫
+Supprime un certificat SSL spécifique avec Certbot.
 ```sh
 certbot delete --cert-name vhost.email.dom
 ```
 
-## lego
-This subsection explains how to use Lego for certificate generation and management with various DNS providers.
+## Lego🌐
+Cette sous-section explique comment utiliser Lego pour la génération et la gestion de certificats avec différents fournisseurs DNS.
 
-### install
-Installs Lego by downloading the latest release and extracting it.
+### install📦
+Installe Lego en téléchargeant la version la plus récente, l'extraittez et exécutez-le.
 ```sh
 wget https://github.com/go-acme/lego/releases/download/v4.16.1/lego_v4.16.1_linux_amd64.tar.gz
 tar xvzf lego_v4.16.1_linux_amd64.tar.gz
 ./lego
 ```
 
-### providers
-Provides a link to the documentation for configuring DNS providers with Lego.
+### providers📖
+Fournit un lien vers la documentation pour configurer les fournisseurs DNS avec Lego.
 ```sh
 https://go-acme.github.io/lego/dns/
 ```
 
-### OVH
-Shows how to configure and use Lego with the OVH DNS provider.
+### OVH 🖥️
+Montre comment configurer et utiliser Lego avec le fournisseur DNS OVH.
 ```sh
 export OVH_APPLICATION_KEY=xxxxxxxxxxx
 export OVH_APPLICATION_SECRET=xxxxxxxxxxxxxxxxxxxxxxx 
@@ -52,4 +58,11 @@ export OVH_ENDPOINT=ovh-eu
 ls -l .lego/certificates/vhost.email.dom.{crt,key}
 ./lego --email your@email.dom --dns ovh --domains *.email.dom run
 ls -l .lego/certificates/_.email.dom.{crt,key}
+```
+
+### Ionos 🖥️
+Montre comment configurer et utiliser Lego avec le fournisseur DNS Ionos.
+```sh
+IONOS_API_KEY=xxxxxxxxxxxxxxxxxxxxxxx
+./lego --email your@email.dom --dns ionos --domains vhost.email.dom run
 ```
