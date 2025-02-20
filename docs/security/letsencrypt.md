@@ -46,7 +46,7 @@ Fournit un lien vers la documentation pour configurer les fournisseurs DNS avec 
 https://go-acme.github.io/lego/dns/
 ```
 
-### OVH🖥️
+### OVH 🖥️
 Montre comment configurer et utiliser Lego avec le fournisseur DNS OVH.
 ```sh
 export OVH_APPLICATION_KEY=xxxxxxxxxxx
@@ -58,4 +58,11 @@ export OVH_ENDPOINT=ovh-eu
 ls -l .lego/certificates/vhost.email.dom.{crt,key}
 ./lego --email your@email.dom --dns ovh --domains *.email.dom run
 ls -l .lego/certificates/_.email.dom.{crt,key}
+```
+
+### Ionos 🖥️
+Montre comment configurer et utiliser Lego avec le fournisseur DNS Ionos.
+```sh
+IONOS_API_KEY=xxxxxxxxxxxxxxxxxxxxxxx
+./lego --email your@email.dom --dns ionos --domains vhost.email.dom run
 ```
