@@ -59,19 +59,46 @@
 * -E : date of password expiration (days from timestamp init)
 * -d : date of password changing
 
-### Ajouter un utilisateur au sudoers 📦
+### Voir un utilisateur spécifique 📦
+    # id alice
 
-    # usermod –aG wheel $USER
+### Ajouter un utilisateur aux groupes 🌍
+    # usermod –aG group1,group2 alice
 
-### Ajouter un utilisateur aux groupes 
-
-    # usermod –aG group1,group2 $USER
-
-### Supprimer un utilisateur des groupes
-    # usermod –aG group1,group2 $USER
+### Supprimer un utilisateur des groupes 🌐
+    # usermod –G group2 alice
+    # usermod –G '' alice
 
 ### Supprimer un utilisateur du système 💣
     # userdel -r clinux
 * -r : supprime le répertoire de l'utilisateur (par défaut /home/username)
 * -Z : supprime le contexte SELinux pour le compte d'utilisateur
 * -f : force la suppression sans demander confirmation et même si l'utilisateur est connecté sur le système 💥
+
+## Sudoers 📦
+
+Gerer finement (ou pas) des droits supplementaires sur le systeme.
+
+### Editeur
+⚠️ Attention, la modification des droits sudoers doit se faire avec precaution. Le fichier `/etc/sudoers` est très sensible et peut causer des problèmes si modifié incorrectement.
+L'edition des droits sudoers se fait avec `visudo` qui permet de vérifier les droits avant de les modifier.
+
+    # visudo
+
+### Syntaxe
+
+#### Possibilite de devenir root sans mot de passe
+    alice ALL=(ALL) NOPASSWD: ALL
+
+#### Autoriser uniquement une commande avec un certain argument pour un utilisateur spécifique
+    alice ALL=(ALL) NOPASSWD: /usr/bin/dnf update
+
+#### Autoriser un groupe à exécuter une commande sans mot de passe
+    %alice ALL=(ALL) NOPASSWD: /usr/bin/dnf update
+
+#### Autoriser une commande en tant qu'un autre utilisateur
+    alice ALL=(bob) NOPASSWD: /home/bob/script.sh
+
+#### Verification les droits sudoers
+    su - alice
+    sudo -l
