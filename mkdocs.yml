@@ -33,7 +33,6 @@ nav:
     - 'Gnome' : linux/gnome.md       
     - 'Rescue' : linux/rescue.md          
   - Rocky: 
-    - 'Storage' : rocky/storage.md
     - 'Network' : rocky/network.md
     - 'Firewall' : rocky/firewalld.md 
     - 'Locales' : rocky/locales.md        
