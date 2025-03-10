@@ -75,6 +75,19 @@
 * -Z : supprime le contexte SELinux pour le compte d'utilisateur
 * -f : force la suppression sans demander confirmation et même si l'utilisateur est connecté sur le système 💥
 
+## SU (Super user) 🔄
+
+### su - 🚀 
+On demande l'acces au shell de root (en donnant le mot de passe root)
+    su - 
+
+### Changer d'utilisateur 🤖
+    su -l alice 
+    su - alice
+
+### Lancer une commande en tant qu'un autre utilisateur 🎮
+    su -l alice -c "id && pwd"
+
 ## Sudoers 📦
 
 Gerer finement (ou pas) des droits supplementaires sur le systeme.
@@ -94,7 +107,7 @@ L'edition des droits sudoers se fait avec `visudo` qui permet de vérifier les d
     alice ALL=(ALL) NOPASSWD: /usr/bin/dnf update
 
 #### Autoriser un groupe à exécuter une commande sans mot de passe
-    %alice ALL=(ALL) NOPASSWD: /usr/bin/dnf update
+    %alice ALL=(ALL) NOPASSWD: /usr/bin/dnf install *
 
 #### Autoriser une commande en tant qu'un autre utilisateur
     alice ALL=(bob) NOPASSWD: /home/bob/script.sh
