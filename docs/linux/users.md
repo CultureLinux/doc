@@ -75,7 +75,7 @@
 * -Z : supprime le contexte SELinux pour le compte d'utilisateur
 * -f : force la suppression sans demander confirmation et même si l'utilisateur est connecté sur le système 💥
 
-## SU (Super user) 🔄
+## SU (Switch User) 🔄
 
 ### su - 🚀 
 On demande l'acces au shell de root (en donnant le mot de passe root)
