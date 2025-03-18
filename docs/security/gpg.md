@@ -30,5 +30,6 @@
 ### add
     gpg --import public.gpg
     gpg --import private.gpg
+    
 ## Sign 
 ### Setup identity

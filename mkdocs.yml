@@ -25,11 +25,12 @@ nav:
   - Home: index.md
   - Linux: 
     - 'Environement' : linux/environnement.md
-    - 'History' : linux/history.md
-    - 'Storage' : linux/storage.md  
+    - 'Historique' : linux/history.md
+    - 'Stockage' : linux/storage.md  
+    - 'Utilisateurs' : linux/users.md    
+    - 'Permissions' : linux/permissions.md            
     - 'Nmap' : linux/nmap.md
     - 'Security' : linux/security.md        
-    - 'Users' : linux/users.md    
     - 'Gnome' : linux/gnome.md       
     - 'Rescue' : linux/rescue.md          
   - Rocky: 
@@ -65,7 +66,8 @@ nav:
     - 'Iptables' : security/iptables.md    
     - 'Lets Encrypt' : security/letsencrypt.md        
     - 'SSH' : security/ssh.md       
-    - 'WireGuard' : security/wireguard.md        
+    - 'WireGuard' : security/wireguard.md    
+    - 'GPG' : security/gpg.md  
   - Git:
     - 'CLI' : git/git.md    
     - 'Gitlab' : git/gitlab.md        
