@@ -1,10 +1,6 @@
 # 🚀 Permissions Linux
 
-- Les permissions Unix/Linux sont une manière de contrôler l'accès à des ressources (fichiers, dossiers) par les utilisateurs.
-- Les permissions peuvent être définies en trois niveaux : lecteur (`r`), écrivain (`w`) et exécuteur (`x`).
-- Ces droits peuvent être combinés pour créer différents niveaux de contrôle.
-
-## 📚 Format
+## 📚 Permissions standard
 ### 📝 Alphabetique
 
 - **Lecture (r)**: L'utilisateur peut lire le contenu du fichier ou dossier.
@@ -24,8 +20,27 @@ Les permissions peuvent également être codées en base 10. Chaque droits est r
 Pour combiner ces droits, on les ajoute entre eux. Par exemple, la permission `rwx` correspond au calcul suivant : 4 + 2 + 1 = 7.
 
 ### Répertoire
-
 ⚠️ Pour renter dans un répertoire, il faut avoir les droits d'exécution (`x`).
+
+## 📚 Sticky Bit
+
+Le sticky bit est un attribut qui empêche les utilisateurs normaux d'effacer ou de déplacer des fichiers dans un répertoire. Cela peut être utile pour protéger des fichiers sensibles.
+
+⚠️ Le sticky bit ne bloque que les suppressions entre utilisateurs normaux. Le propriétaire du dossier garde le contrôle total.
+
+```bash
+chmod +t /home/alice/monrep
+chmod -t /home/alice/monrep
+```
+
+## setuid et setgid
+### setuid
+
+Le setuid est un attribut qui permet au propriétaire du fichier de l'exécuter avec les privilèges du propriétaire, plutôt que ceux de l'utilisateur exécutant le programme.
+
+```bash
+chmod u+s /usr/bin/sudo
+```
 
 ## 🌿 lsattr et chattr
 
@@ -49,14 +64,19 @@ sudo chattr -i fichier.txt
 
 ## 📗 ACLs (Access Control Lists)
 
-ACLs sont une alternative aux permissions basées sur les groupes et les utilisateurs. Elles permettent de donner des droits spécifiques à des individus ou des groupes individuels :
+ACLs sont une alternative aux permissions basées sur les groupes et les utilisateurs. Elles permettent de donner des droits spécifiques à des individus ou des groupes individuels.
+
+### Basique
 
 ```bash
-# Ajouter un droit spécifique : 
 setfacl -m u:alice:rwx fichier.txt
-
-# Supprimer un droit spécifique : 
 setfacl -x u:alice:w fichier.txt
 ```
 
-**Note**: Les ACLs sont disponibles sur certains systèmes Linux tels que Red Hat, CentOS et Ubuntu. Vous pouvez vérifier leur activation avec la commande `getfacl`.
+### Forcer les droits sur tous les fichiers et dossiers dans un répertoire
+
+```bash
+setfacl -d -m u:alice:rwX /home/alice/monrep
+setfacl -m u:alice:rwX /home/alice/monrep
+```
+
