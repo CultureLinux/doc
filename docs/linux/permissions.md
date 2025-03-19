@@ -1,6 +1,8 @@
 # 🚀 Permissions Linux
 
-Les permissions Unix/Linux sont une manière de contrôler l'accès à des ressources (fichiers, dossiers) par les utilisateurs. Les permissions peuvent être définies en trois niveaux : lecteur (`r`), écrivain (`w`) et exécuteur (`x`). Ces droits peuvent être combinés pour créer différents niveaux de contrôle.
+- Les permissions Unix/Linux sont une manière de contrôler l'accès à des ressources (fichiers, dossiers) par les utilisateurs.
+- Les permissions peuvent être définies en trois niveaux : lecteur (`r`), écrivain (`w`) et exécuteur (`x`).
+- Ces droits peuvent être combinés pour créer différents niveaux de contrôle.
 
 ## 📚 Format
 ### 📝 Alphabetique
@@ -21,11 +23,22 @@ Les permissions peuvent également être codées en base 10. Chaque droits est r
 
 Pour combiner ces droits, on les ajoute entre eux. Par exemple, la permission `rwx` correspond au calcul suivant : 4 + 2 + 1 = 7.
 
+### Répertoire
+
+⚠️ Pour renter dans un répertoire, il faut avoir les droits d'exécution (`x`).
+
 ## 🌿 lsattr et chattr
 
 `lsattr` et `chattr` sont des commandes utiles pour manipuler les attributs (flags) de fichiers ou dossiers, qui peuvent inclure des droits additionnels :
 
-- **Flags**: a (append), c (compressed), d (delayed allocation), i (immutable), j (journaling), s (synchronous updates), t (timeseekable), u (undeletable), v (version control)
+- **Flags**: 
+    - **a**: uniquement ajouter du contenu
+    - **c**: compression du contenu sur le disque 
+    - **d**: ne sauvegarde pas lors de l'appel à dump
+    - **i**: rendre le fichier immuable 
+    - **j**: journalise les modifications avant d'écrire sur le disque
+    - **s**: passe les blocks à 0 lors de la suppression
+    - **T**: permet de separer les répertoires enfants dans des blocs disques différents
 
 `chattr` permet de définir ces attributs sur des fichiers ou dossiers :
 
