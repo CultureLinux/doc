@@ -19,6 +19,20 @@ Les permissions peuvent également être codées en base 10. Chaque droits est r
 
 Pour combiner ces droits, on les ajoute entre eux. Par exemple, la permission `rwx` correspond au calcul suivant : 4 + 2 + 1 = 7.
 
+## Permissions avancées
+### Setuid 
+⚠️ Attention a ce droit surtout pour root car il est executé avec cet utilisateur
+
+    chmod u+s monbinaire
+    chmod u-s monbinaire
+
+### Setgid
+
+    chmod u+s monbinaire
+    chmod u-s monbinaire
+
+
+
 ### Répertoire
 ⚠️ Pour renter dans un répertoire, il faut avoir les droits d'exécution (`x`).
 

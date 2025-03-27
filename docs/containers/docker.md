@@ -25,6 +25,8 @@ Utilisez les commandes Docker pour créer et configurer des réseaux.
 
 #### 👇 create 
     docker network create web
+
+
 ## 📦 images
 ### 👉 List
     docker images
@@ -36,3 +38,11 @@ Utilisez les commandes Docker pour créer et configurer des réseaux.
 
 ### 🔥 Remove 
     docker image prune -a -f
+
+## 📦 Volumes
+### 👉 List
+    docker volume ls
+    docker volume ls -qf dangling=true
+
+### 🔥 Remove 
+    docker volume prune
