@@ -63,3 +63,8 @@
 ## Medium
 ### change remote
     git remote set-url origin ssh://git@localhost:10022/GROUP/PROJECT.git
+
+### faire le menage sur ses branches locales
+    git fetch --prune
+    git branch -vv | awk '/: gone]/{print $1}' | xargs -r git branch -d
+    git fetch --all --prune
