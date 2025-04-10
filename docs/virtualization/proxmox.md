@@ -1,42 +1,44 @@
 # Proxmox
 
 ## Firewall (iptables)
-### Install
+### Installation
     apt install iptables iptables-persistent
-### Reset all rules 
-
-    iptables -P INPUT ACCEPT
-    iptables -P FORWARD ACCEPT
-    iptables -P OUTPUT ACCEPT
-
-    iptables -F
-
-    iptables -X
-
-    iptables -Z 
-
-    iptables -t nat -F
-    iptables -t nat -X
-    iptables -t mangle -F
-    iptables -t mangle -X
-    iptables -t raw -F
-    iptables -t raw -X
-
-### Setup minimal rules
+### Réinitialiser toutes les règles
 ```
-    iptables -A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
-    iptables -A INPUT -i lo -j ACCEPT
-    iptables -A INPUT -p tcp -m tcp --dport 22 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
-    iptables -A INPUT -p tcp -m tcp --dport 8006 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
-    iptables -A INPUT -j DROP
-    iptables -A OUTPUT -o lo -j ACCEPT
+iptables -P INPUT ACCEPT
+iptables -P FORWARD ACCEPT
+iptables -P OUTPUT ACCEPT
+
+iptables -F
+
+iptables -X
+
+iptables -Z 
+
+iptables -t nat -F
+iptables -t nat -X
+iptables -t mangle -F
+iptables -t mangle -X
+iptables -t raw -F
+iptables -t raw -X
+```
+
+
+### Configuration minimale des règles
+```
+iptables -A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+iptables -A INPUT -i lo -j ACCEPT
+iptables -A INPUT -p tcp -m tcp --dport 22 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
+iptables -A INPUT -p tcp -m tcp --dport 8006 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
+iptables -A INPUT -j DROP
+iptables -A OUTPUT -o lo -j ACCEPT
 ```
 ```
 iptables-save > /etc/iptables/rules.v4
 ```
 
 ## NAT
-### New NIC NAT
+### Nouvelle interface NAT virtuelle
 ```
 vi /etc/network/interfaces
 ```
@@ -57,7 +59,7 @@ ifreload -a
 ```
 ### SSH Jump
     ssh -J jumper@proxmox user@vm
-### SSH config jump
+### SSH configuration du jump
     Host jumper-proxmox
     HostName proxmox
     User jumper
@@ -68,17 +70,17 @@ ifreload -a
     User root
     IdentityFile ~/.ssh/id_ed25519  
 
-### PAT ssh to VM
+### PAT SSH à une VM
     iptables -t nat -A PREROUTING -p tcp --dport 122 -j DNAT --to-destination 192.168.77.121:22
 ### PAT scp 
      scp -o ProxyJump=jumper@proxmox local_file root@192.168.77.121:/dest_path
 ### PAT rsync 
     rsync -azvP -e "ssh -J jumper@proxmox" local_file root@192.168.77.121:/dest_path 
 
-## Build template
-### get qcow image
+## Création d'un template
+### Récupération de l'image QCOW
     cd /tmp && wget https://cloud.debian.org/images/cloud/bookworm/20231013-1532/debian-12-genericcloud-amd64-20231013-1532.qcow2
-### build template vm
+### Création d'un template VM
     qm create 1000 --memory 1024 --core 1 --name debian12-temp --net0 virtio,bridge=vmbr0 --description "Debian 12 cloud template"
     qm importdisk 1000 /tmp/debian-12-genericcloud-amd64-20231013-1532.qcow2 local-lvm
     qm set 1000 --scsihw virtio-scsi-pci --scsi0 local-lvm:vm-1000-disk-0
@@ -87,17 +89,17 @@ ifreload -a
     qm set 1000 --serial0 socket --vga serial0
     rm -f /tmp/debian-12-genericcloud-amd64-20231013-1532.qcow2
 
-## Extend HD
-### Gui
+## Extension d'un disque dur
+### Interface Graphique Proxmox
     VM > Hardware > HD > Disk Action > Resize 
-### Cli
+### Interface CLI
     qm resize VMID DISKNAME +5G
-### Guest 
+### VM 
     growpart /dev/sda 1
     resize2fs /dev/sda1 
 
-## Shrink HD
-### Proxmox (only SCSI)
+## Shrink des disques durs
+### Proxmox (seulement pour SCSI)
     Activate Discard option on HD
 ### RHEL
     systemctl enable fstrim.timer --now
@@ -105,21 +107,21 @@ ifreload -a
 ### Qcow/LVM
     fstrim -v /
 
-## Cli management
-### List storage
+## Gestion CLI
+### Liste des stockages
     # pvesm status
-### List disk in storage
+### Liste des disques dans un stockage
     # pvesm list local
-### List disk in storage
+### Suppression d'un disque dans un stockage
     # pvesm free STORAGE:DISK
 
-### List vm
+### Liste des VM
     # qm list 
-### List disk 
+### Voir la configuration d'une VM
     # qm config $VMID
-### Remove disk 
+### Suppression d'un disque dans une VM
     # qm set $VMID --delete unused0
-### Create VM
+### Création d'une VM
     qm create 200 \
         --memory 4096 \
         --core 3 --cpu "cputype=x86-64-v2-AES" \
@@ -132,40 +134,40 @@ ifreload -a
     qm set 200 --scsi0 local-lvm:10,format=qcow2
     qm set 200 --boot order='scsi0;ide2;net0'
 
-### Delete vm
+### Suppression d'une VM
     qm stop 200
     qm destroy 200
 
-### Snapshot vm
+### Instantané d'une VM (snapshot)
     qm snapshot 200 test_snap
     qm snapshot 200 test_snap_with_ram --vmstate 1
     qm listsnapshot 200
     qm delsnapshot 200 test_snap
 
-### Rollback vm
+### Restoration d'un instantané
     qm rollback 200 test_snap
     qm rollback 200 test_snap --start 1
     qm rollback 200 test_snap_with_ram
 
-## Memory
-### free page
+## Mémoire
+### Libération
     free -m
     echo 1 > /proc/sys/vm/compact_memory
     free -m
 
-## Storage
-### SMB
-#### Gui
+## Stockage
+### Samba (SMB)
+#### Interface Graphique
 Attention la version du protocole est 3
     Datacenter > Storage > SMB/CIFS
-### Cli
+### Interface Cli
     pvesm add cifs syno --server $(IP/DNS) --share $(SHARE NAME) --username $(USERNAME) --password $(PASSWORD) --content images,iso,backup
 
-## Metric server
+## Serveur de métriques
 ### influxdb2
-#### Install 
+#### Installation
 [Rocky9 installation](../monitoring/influxdb.md)
-#### Setup
+#### Configuration
 ```
     Organization : proxmox
 ```
@@ -175,8 +177,8 @@ Attention la version du protocole est 3
 ```
     Save  $TOKEN
 ```
-### proxmox 
-#### Gui
+### Proxmox 
+#### Interface Graphique 
 ```
     datacenter > Metric Server > Add > InfluxDB
 ```
@@ -187,47 +189,48 @@ Attention la version du protocole est 3
     Protocol : HTTP
     Token : $TOKEN
 ```
-### grafana
-#### Install 
+### Grafana
+#### Configuration 
 [Rocky9 installation](../monitoring/grafana.md)
 #### Setup
 ```
-    datasource > add datasource > influxdb
+datasource > add datasource > influxdb
 ```
 -  Protocol Flux
 -  Server :  localhost
+
 ```
-    
-```
-```
-    Save  $TOKEN
+Save  $TOKEN
 ```
 
 ## Windows
-### Get iso
-[Win11 Eval](https://www.microsoft.com/fr-fr/evalcenter/download-windows-11-enterprise)
-### Get drivers iso
+* ▶️ [Windows 11 et virtio](https://www.youtube.com/watch?v=8JkV2b81a3M)
+* ▶️ [Windows 11 unnatend](https://www.youtube.com/watch?v=z29mUiUJdlg&pp=0gcJCX4JAYcqIYzv)
+* [Unattend online](https://schneegans.de/windows/unattend-generator/)
+### Récupération de l'ISO Windows
+[Windows 11 Eval](https://www.microsoft.com/fr-fr/evalcenter/download-windows-11-enterprise)
+### Récupération de l'ISO des pilotes
 [Driver](https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win.iso)
-### Create VM 
+### Création d'une VM
 #### OS
 * Type : Microsoft Windows
 * Version : 11/2022/2025
 * Add additionnal drive for Virtio drivers
-#### System 
+#### Système 
 * EFI storage 
 * Add TPM
-#### Disk
+#### Disque
 * SSD emulation
 * Cache : writeback
 * Discard : yes
 * IOthread : yes
   
-### Load drivers 
+### Chargement des drivers
 * vioscsi
 * NetKVM
 * Balloon
 
-### Trimm
+### Trim
 * Disk/Properties/Optimize
 * optimize-volume -drive c -verbose -retrim
 
@@ -245,7 +248,7 @@ Attention la version du protocole est 3
 
 ### Mattermost
 
-[Create webhook](https://developers.mattermost.com/integrate/webhooks/incoming/)
+[Faire un webhook](https://developers.mattermost.com/integrate/webhooks/incoming/)
 
 * Headers 
 ```
