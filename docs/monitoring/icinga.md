@@ -275,6 +275,15 @@ Now restart your Icinga 2 daemon to finish the installation!
 systemctl restart icinga2.service
 ```
 
+### Windows agent
+
+* [Windows Icinga2 agent](https://packages.icinga.com/IcingaForWindows/stable/agent/)
+
+#### Allow icmp
+```
+netsh advfirewall firewall add rule name="ICMPv4 Allow Ping Requests" protocol=icmpv4:8,any dir=in action=allow
+```
+
 ## Observability 
 ### Master
 ```
