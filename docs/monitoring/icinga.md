@@ -286,6 +286,14 @@ netsh advfirewall firewall add rule name="ICMPv4 Allow Ping Requests" protocol=i
 #### check powershell
 
 ```
+ apply Service "Powershell test" {
+     command_endpoint = host.vars.client_endpoint
+     check_command = "powershell_check"
+     vars.ps_command = "checkps_test.ps1"
+     assign where host.vars.client_endpoint
+ }
+
+
  object CheckCommand "powershell_check" {
    import "plugin-check-command"
    command = [ "C:\\Windows\\system32\\WindowsPowerShell\\v1.0\\powershell.exe" ]
