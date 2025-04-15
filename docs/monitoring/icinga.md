@@ -283,6 +283,30 @@ systemctl restart icinga2.service
 ```
 netsh advfirewall firewall add rule name="ICMPv4 Allow Ping Requests" protocol=icmpv4:8,any dir=in action=allow
 ```
+#### check powershell
+
+```
+ object CheckCommand "powershell_check" {
+   import "plugin-check-command"
+   command = [ "C:\\Windows\\system32\\WindowsPowerShell\\v1.0\\powershell.exe" ]
+   arguments = {
+     "-command" = {
+     value = "& 'C:\\Program Files\\ICINGA2\\sbin\\$ps_command$' $ps_arguments$"
+     order = -1
+     }
+     "-warn" = {
+     value = "$ps_warn$"
+     }
+     "-crit" = {
+     value = "$ps_crit$"
+     }
+     ";exit" = {
+     value = "$$LastExitCode"
+     }
+   }
+ }
+
+```
 
 ## Observability 
 ### Master
