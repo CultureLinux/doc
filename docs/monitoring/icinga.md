@@ -275,6 +275,47 @@ Now restart your Icinga 2 daemon to finish the installation!
 systemctl restart icinga2.service
 ```
 
+### Windows agent
+
+* [Windows Icinga2 agent](https://packages.icinga.com/IcingaForWindows/stable/agent/)
+
+#### Allow icmp
+```
+netsh advfirewall firewall add rule name="ICMPv4 Allow Ping Requests" protocol=icmpv4:8,any dir=in action=allow
+```
+#### check powershell
+
+```
+ apply Service "Powershell test" {
+     command_endpoint = host.vars.client_endpoint
+     check_command = "powershell_check"
+     vars.ps_command = "checkps_test.ps1"
+     assign where host.vars.client_endpoint
+ }
+
+
+ object CheckCommand "powershell_check" {
+   import "plugin-check-command"
+   command = [ "C:\\Windows\\system32\\WindowsPowerShell\\v1.0\\powershell.exe" ]
+   arguments = {
+     "-command" = {
+     value = "& 'C:\\Program Files\\ICINGA2\\sbin\\$ps_command$' $ps_arguments$"
+     order = -1
+     }
+     "-warn" = {
+     value = "$ps_warn$"
+     }
+     "-crit" = {
+     value = "$ps_crit$"
+     }
+     ";exit" = {
+     value = "$$LastExitCode"
+     }
+   }
+ }
+
+```
+
 ## Observability 
 ### Master
 ```
