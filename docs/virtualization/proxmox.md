@@ -149,6 +149,16 @@ ifreload -a
     qm rollback 200 test_snap --start 1
     qm rollback 200 test_snap_with_ram
 
+### Changer un vmid (100 > 200)
+    qm shutdown 100
+    lvs -a | grep "\-100\-"
+    lvrename pve/vm-100-cloudinit pve/vm-200-cloudinit
+    lvrename pve/vm-100-disk-0 pve/vm-200-disk-0
+    sed -i "s/vm-100-cloudinit/vm-200-cloudinit/g" /etc/pve/qemu-server/100.conf
+    sed -i "s/vm-100-disk-0/vm-200-disk-0/g" /etc/pve/qemu-server/100.conf
+    mv /etc/pve/qemu-server/100.conf /etc/pve/qemu-server/200.conf
+    qm start 200
+    
 ## Mémoire
 ### Libération
     free -m

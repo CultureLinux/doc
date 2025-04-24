@@ -80,6 +80,50 @@ sudo chattr -i fichier.txt
 
 ACLs sont une alternative aux permissions basées sur les groupes et les utilisateurs. Elles permettent de donner des droits spécifiques à des individus ou des groupes individuels.
 
+### Test 
+```bash
+#!/bin/bash
+
+echo "🔍 Vérification du support ACL sur le système de fichiers..." 
+echo "------------------------------------------------------------"
+
+# 1. Afficher les points de montage et leurs systèmes de fichiers
+echo -e "\n📁 Points de montage :"
+findmnt -o TARGET,FSTYPE,OPTIONS | grep -v tmpfs
+
+# 2. Vérifier si 'acl' est une option de montage active
+echo -e "\n🔧 Vérification des options de montage contenant 'acl' :"
+mount | grep acl || echo "❌ Aucun système de fichiers monté avec l'option explicite 'acl'. Peut être activé par défaut."
+
+# 3. Vérifier les entrées fstab
+echo -e "\n📜 Vérification de /etc/fstab pour 'acl' :"
+grep acl /etc/fstab || echo "❌ Aucune option 'acl' dans /etc/fstab."
+
+# 4. Test réel sur un fichier temporaire
+TMPFILE="/tmp/test_acl_$$"
+touch "$TMPFILE"
+
+echo -e "\n🧪 Test pratique : ajout d'une ACL sur un fichier temporaire : $TMPFILE"
+if setfacl -m u:$(whoami):r "$TMPFILE" 2>/dev/null; then
+    echo "✅ ACL ajoutée avec succès. Support ACL fonctionnel sur /tmp."
+    getfacl "$TMPFILE"
+else
+    echo "❌ Impossible d'ajouter une ACL. Ce système de fichiers ne supporte probablement pas les ACLs."
+fi
+
+rm -f "$TMPFILE"
+
+# 5. Vérification du kernel (pour les systèmes avec config.gz dispo)
+echo -e "\n🧠 Vérification du support ACL dans le noyau :"
+if [ -f /proc/config.gz ]; then
+    zgrep CONFIG_EXT4_FS_POSIX_ACL /proc/config.gz || echo "❌ Option noyau CONFIG_EXT4_FS_POSIX_ACL absente ou désactivée."
+else
+    echo "ℹ️ Fichier /proc/config.gz introuvable. Impossible de vérifier la config du noyau."
+fi
+
+echo -e "\n🎉 Vérification terminée."
+```
+
 ### Basique
 
 ```bash
