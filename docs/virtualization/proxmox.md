@@ -37,6 +37,13 @@ iptables -A OUTPUT -o lo -j ACCEPT
 iptables-save > /etc/iptables/rules.v4
 ```
 
+## Certificats ssl 
+### Installation (node proxmox2)
+    scp _.local.clinux.fr.crt root@proxmox2.local.clinux.fr:/etc/pve/nodes/proxmox2/pve-ssl.pem
+    scp _.local.clinux.fr.key root@proxmox2.local.clinux.fr:/etc/pve/nodes/proxmox2/pve-ssl.key
+### Rechargement de l'interface
+    systemctl restart pveproxy
+
 ## NAT
 ### Nouvelle interface NAT virtuelle
 ```
