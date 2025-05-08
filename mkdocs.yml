@@ -71,3 +71,5 @@ nav:
   - Git:
     - 'CLI' : git/git.md    
     - 'Gitlab' : git/gitlab.md        
+  - Services:
+    - 'MinIO' : services/minio.md      

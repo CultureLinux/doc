@@ -1,6 +1,6 @@
 # OpenTofu
 ## Github
-    wget https://github.com/opentofu/opentofu/releases/download/v1.6.2/tofu_1.6.2_linux_amd64.zip
+    wget https://github.com/opentofu/opentofu/releases/download/v1.9.1/tofu_1.9.1_linux_amd64.zip
     unzip tofu*
     cp tofu /usr/local/bin/
 
