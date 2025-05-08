@@ -293,3 +293,39 @@ Content-Type : application/json
   ]
 }
 ```
+
+## Grappe (cluster)
+### Pre-requis
+- Au minimum 2 serveurs proxmox
+- Les ports UDP de 5405 à 5412 doivent etre ouverts entre les noeuds
+- L'heure doit être synchronisée sur tous les noeuds proxmox (ntp)
+- Les IP et noms d'host des serveurs proxmox doivent être configurés correctement dans le fichier `/etc/hosts` de chaque serveur proxmox
+- L'ajout d'un noeud à la grappe ne peux se faire que si le noeuds n'a pas de machine virtuelle dessus
+- Idealement le réseau dédié à la grappe doit se faire sur une carte réseau séparée
+
+### Création
+    pvecm create Trash-Cluster
+    pvecm status
+
+### Ajout d'un noeud à la grappe
+    pvecm add <dns/ip cluster>
+    pvecm add <dns/ip cluster> --link0 LOCAL-IP-ADDRESS-LINK0 #cas d'un réseau séparé
+    pvecm status
+
+### Changement suite à l'ajout d'un nouveau noeud dans la grappe
+- Le fichier ~/.ssh/authorized_keys est maintenant un symlink venant du noeud principal de la grappe
+- Utilisateurs et API token viennent aussi du noeud principal de la grappe
+- L'ajout de stockage peut se faire sur tous les noeuds de la grappe
+- Un bouton migration est apparu dans le menu d'une VM
+
+### Sortir un noeud de la grappe
+    systemctl stop pve-cluster
+    systemctl stop corosync
+
+    pmxcfs -l
+
+    rm /etc/pve/corosync.conf
+    rm -r /etc/corosync/*
+
+    killall pmxcfs
+    systemctl start pve-cluster
