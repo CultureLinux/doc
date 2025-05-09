@@ -215,3 +215,39 @@ mc admin policy attach MonMinio MaPolitique1 --group monGroupe1
 mc admin policy detach MonMinio MaPolitique1 --user utilisateur1
 mc admin policy detach MonMinio MaPolitique1 --group monGroupe1
 ```
+
+## Maintenance
+### Backup
+[minio-backup](https://github.com/CultureLinux/toolbox/blob/main/minio-backup.sh)
+### Restoration
+[minio-restore](https://github.com/CultureLinux/toolbox/blob/main/minio-restore.sh)
+
+
+
+
+
+
+## A verifier 
+### Exporter les metadatas
+```bash
+mc admin cluster bucket export MonMinio
+```
+
+### Exporter les données IAM
+```bash
+mc admin cluster iam export MonMinio
+```
+
+### Sauvegarder les datas 
+```bash
+mkdir -p /home/minio-user/backup_migration
+mc mirror MonMinio /home/minio-user/backup_migration --overwrite --preserve
+```
+### Sauvegarder la configuration 
+```bash
+mc admin user list MonMinio > users.txt
+mc admin policy list MonMinio > policies.txt
+mc admin info MonMinio > cluster-info.txt
+```
+
+
