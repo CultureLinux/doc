@@ -52,7 +52,7 @@ Filesystem      Size  Used Avail Use% Mounted on
 /dev/sdb1        98G   24K   93G   1% /rsync
 ```
 
-#### FS standard
+#### FS standard (ext*)
 
 Réajuste le système de fichiers pour utiliser l'espace alloué à la partition étendue 🔁.
 ```sh
@@ -62,6 +62,11 @@ Vérifie les nouvelles utilisations du disque de stockage 📈.
 ```sh
 Filesystem      Size  Used Avail Use% Mounted on
 /dev/sdb1       108G   24K  103G   1% /rsync
+```
+
+#### FS XFS 
+```sh
+resize2fs /dev/sdb1
 ```
 
 #### LVM
