@@ -223,8 +223,12 @@ mc admin policy detach MonMinio MaPolitique1 --group monGroupe1
 [minio-restore](https://github.com/CultureLinux/toolbox/blob/main/minio-restore.sh)
 
 
-
-
+## Monitoring
+### Generation VictoriaMetrics/Prometheus
+#### Cluster (grafana dashboard : 13502)
+  mc admin prometheus generate minio
+#### Node ()
+  mc admin prometheus generate minio node
 
 
 ## A verifier 
