@@ -73,6 +73,10 @@ vi /etc/nginx/nginx.conf
 ### Redirection automatique vers https (a rajouter dans le bloc 80 - http)
     return 301 https://$host$request_uri;
 
+### Ajout de l'autorié de certificats dans le navigateur 
+
+Récuperer le fichier `/root/.local/share/mkcert/rootCA.pem` et charger le en tant que certificat d'autorité
+
 ## Gestion des virtual hosts (vhost)
 ### Création de repertoires 
 ```
@@ -88,7 +92,7 @@ vi /etc/nginx/nginx.conf
 include /etc/nginx/sites-enable/*.conf;
 ...
 ```
-### Vhost standard
+### Vhost par defaut
 ```
 vi /etc/nginx/sites-available/web.lab.clinux.fr.conf
 ```
@@ -116,13 +120,18 @@ server {
     ssl_ciphers PROFILE=SYSTEM;
     ssl_prefer_server_ciphers on;
 
-    error_page 404 /404.html;
-        location = /40x.html {
+    error_page 404 /custom_errors/404.html;
+    error_page 500 502 503 504 /custom_errors/50x.html;
+
+    location /custom_errors/ {
+        alias /usr/share/nginx/html/;
+        internal;
     }
 
-    error_page 500 502 503 504 /50x.html;
-        location = /50x.html {
+    location / {
+        try_files $uri $uri/ =404;
     }
+
 }
 ```
 
@@ -136,3 +145,64 @@ server {
 ```
 tail -f /var/log/nginx/web.lab.clinux.fr*.log
 ```
+
+## Hebergement par utilisateur
+### Autoriser nginx a rentrer dans la /home
+    usermod -aG static nginx
+    chmod 750 /home/static
+### Verifier le log selinux 
+    tail -f /var/log/audit/audit.log
+    audit2why -all
+### SElinux pour utilisateurs 
+    setsebool -P httpd_enable_homedirs 1
+###  Vhost 
+```
+vi /etc/nginx/sites-available/web-static.lab.clinux.fr.conf
+```
+```
+server {
+    listen       80 ;
+    listen       [::]:80 ;
+    server_name  web-static.lab.clinux.fr;
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen       443 ssl http2 ;
+    listen       [::]:443 ssl http2 ;
+    server_name  web-static.lab.clinux.fr;
+
+    access_log /var/log/nginx/web-static.lab.clinux.fr.access.log;
+    error_log  /var/log/nginx/web-static.lab.clinux.fr.error.log warn;
+
+    ssl_certificate "/etc/nginx/ssl/_wildcard.lab.clinux.fr+3.pem";
+    ssl_certificate_key "/etc/nginx/ssl/_wildcard.lab.clinux.fr+3-key.pem";
+    ssl_session_cache shared:SSL:1m;
+    ssl_session_timeout  10m;
+    ssl_ciphers PROFILE=SYSTEM;
+    ssl_prefer_server_ciphers on;
+
+
+    root /home/static/html/;
+    index index.html;
+
+    error_page 404 /custom_errors/404.html;
+    error_page 500 502 503 504 /custom_errors/50x.html;
+
+    location /custom_errors/ {
+        alias /usr/share/nginx/html/;
+        internal;
+    }
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+}
+```
+###  Activation 
+```
+ln -s /etc/nginx/sites-available/web-static.lab.clinux.fr.conf /etc/nginx/sites-enable/web-static.lab.clinux.fr.conf
+nginx -t && service nginx reload
+```
+
