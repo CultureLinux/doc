@@ -28,11 +28,13 @@ nav:
     - 'Historique' : linux/history.md
     - 'Stockage' : linux/storage.md  
     - 'Utilisateurs' : linux/users.md    
+    - 'Sudoers' : linux/sudoers.md            
     - 'Permissions' : linux/permissions.md            
     - 'Nmap' : linux/nmap.md
     - 'Security' : linux/security.md        
     - 'Gnome' : linux/gnome.md       
-    - 'Rescue' : linux/rescue.md          
+    - 'Rescue' : linux/rescue.md  
+    - 'GRUB' : linux/grub.md        
   - Rocky: 
     - 'Network' : rocky/network.md
     - 'Firewall' : rocky/firewalld.md 
@@ -52,7 +54,8 @@ nav:
     - 'SqlServer' : databases/sqlserver.md
     - 'InfluxDB' : databases/influxdb.md       
   - Monitoring:
-    - 'Icinga' : monitoring/icinga.md      
+    - 'Icinga' : monitoring/icinga.md     
+    - 'VictoriaMetrics' : monitoring/victoriametrics.md      
     - 'InfluxDB' : monitoring/influxdb.md    
     - 'Grafana' : monitoring/grafana.md            
   - Virtualization:
@@ -68,6 +71,7 @@ nav:
     - 'SSH' : security/ssh.md       
     - 'WireGuard' : security/wireguard.md    
     - 'GPG' : security/gpg.md  
+    - 'StepCA' : security/stepca.md        
   - Git:
     - 'CLI' : git/git.md    
     - 'Gitlab' : git/gitlab.md        

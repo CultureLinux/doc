@@ -78,6 +78,17 @@ Installer la meme version de gitlab que celle du backup à restorer
 
 Une fois l'upgrade fait, il faut attendre la fin des background migrations
 
+## Small config 
+``` /etc/gitlab/gitlab.rb
+    alertmanager['enable'] = false
+    gitlab_exporter['enable'] = false
+    gitlab_kas['enable'] = false
+    node_exporter['enable'] = false
+    postgres_exporter['enable'] = false
+    prometheus['enable'] = false
+    redis_exporter['enable'] = false
+```
+
 ## CI-CD
 ### Install runner 
     curl -L --output /usr/local/bin/gitlab-runner "https://s3.dualstack.us-east-1.amazonaws.com/gitlab-runner-downloads/latest/binaries/gitlab-runner-linux-amd64"
