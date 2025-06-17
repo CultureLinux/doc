@@ -77,3 +77,5 @@ nav:
     - 'Gitlab' : git/gitlab.md        
   - Services:
     - 'MinIO' : services/minio.md      
+  - Web: 
+    - 'NGINX' : web/nginx.md     
