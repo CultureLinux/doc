@@ -23,7 +23,7 @@ vi /root/.bashrc
 
 ## Ajout du TLS
 ### Installation de mkcert
-    dnf install curl nss-tools
+    dnf install curl nss-tools wget
     curl -s https://api.github.com/repos/FiloSottile/mkcert/releases/latest | grep browser_download_url | grep '\linux-amd64' | cut -d '"' -f 4 | wget -i -
     mv mkcert-v*-linux-amd64 /usr/bin/mkcert
     chmod 750 /usr/bin/mkcert
