@@ -78,4 +78,4 @@ nav:
   - Services:
     - 'MinIO' : services/minio.md      
   - Web: 
-    - 'NGINX' : web/nginx.md     
+    - 'Nginx' : web/nginx.md     

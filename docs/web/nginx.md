@@ -40,7 +40,7 @@ vi /root/.bashrc
 	#Generate "_wildcard.lab.clinux.fr+3.pem" and "_wildcard.lab.clinux.fr+3-key.pem".
 ### Modification de la configuration 
 ```
-vi /etc/nginx/nginx.conf
+    vi /etc/nginx/nginx.conf
 ```
 ```
     server {
@@ -67,7 +67,7 @@ vi /etc/nginx/nginx.conf
             location = /50x.html {
         }
     }
-```    
+```
 ### Ouverture du port
     firewall-cmd --add-port=443/tcp --permanent && firewall-cmd --reload;
 ### Redirection automatique vers https (a rajouter dans le bloc 80 - http)

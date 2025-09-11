@@ -329,3 +329,8 @@ Content-Type : application/json
 
     killall pmxcfs
     systemctl start pve-cluster
+
+## Upgrade
+### PVE 8 > 9 
+#### Instructions
+    https://pve.proxmox.com/wiki/Upgrade_from_8_to_9
