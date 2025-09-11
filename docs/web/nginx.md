@@ -56,7 +56,6 @@ vi /root/.bashrc
         ssl_ciphers PROFILE=SYSTEM;
         ssl_prefer_server_ciphers on;
 
-        # Load configuration files for the default server block.
         include /etc/nginx/default.d/*.conf;
 
         error_page 404 /404.html;
