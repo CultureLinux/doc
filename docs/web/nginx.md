@@ -45,8 +45,8 @@ vi /etc/nginx/nginx.conf
 
 ```
 server {
-    listen       443 ssl http2;
-    listen       [::]:443 ssl http2;
+    listen       443 ssl http2 default;
+    listen       [::]:443 ssl http2 default;
     server_name  _;
     root         /usr/share/nginx/html;
 
@@ -56,8 +56,6 @@ server {
     ssl_session_timeout  10m;
     ssl_ciphers PROFILE=SYSTEM;
     ssl_prefer_server_ciphers on;
-
-    include /etc/nginx/default.d/*.conf;
 
     error_page 404 /404.html;
         location = /40x.html {
@@ -99,15 +97,15 @@ vi /etc/nginx/sites-available/web.lab.clinux.fr.conf
 ```
 ```
 server {
-    listen       80 default;
-    listen       [::]:80 default;
+    listen       80;
+    listen       [::]:80;
     server_name  web.lab.clinux.fr;
     return 301 https://$host$request_uri;
 }
 
 server {
-    listen       443 ssl http2 default;
-    listen       [::]:443 ssl http2 default;
+    listen       443 ssl http2;
+    listen       [::]:443 ssl http2;
     server_name  web.lab.clinux.fr;
     root         /usr/share/nginx/html;
 
