@@ -42,6 +42,7 @@ vi /root/.bashrc
 ```
 vi /etc/nginx/nginx.conf
 ```
+
 ```
 server {
     listen       443 ssl http2;
@@ -67,6 +68,7 @@ server {
     }
 }
 ```
+
 ### Ouverture du port
     firewall-cmd --add-port=443/tcp --permanent && firewall-cmd --reload;
 ### Redirection automatique vers https (a rajouter dans le bloc 80 - http)
