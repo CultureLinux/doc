@@ -141,3 +141,29 @@ Une fois l'upgrade fait, il faut attendre la fin des background migrations
     psql -h localhost -U gitlab -d gitlabhq_production -W
     gitlabhq_production=> ALTER TABLE sent_notifications DROP COLUMN id_convert_to_bigint;
     gitlabhq_production=> \q
+### Chercher les clés ssh
+#### Connexion à la base
+    docker exec -it sameersbn-gitlab-postgresql-1 bash
+#### Recherche dans les utilisateurs
+    SELECT k.id AS key_id,
+        k.title,
+        k.fingerprint,
+        u.id AS user_id,
+        u.username,
+        u.email,
+        k.created_at
+    FROM keys k
+    JOIN users u ON k.user_id = u.id ;
+#### Recherche dans les projets
+    SELECT k.id AS key_id,
+        k.type,
+        k.title,
+        k.fingerprint,
+        p.id AS project_id,
+        n.path || '/' || p.path AS full_path,
+        dkp.can_push,
+        dkp.created_at
+    FROM keys k
+    JOIN deploy_keys_projects dkp ON k.id = dkp.deploy_key_id
+    JOIN projects p ON dkp.project_id = p.id
+    JOIN namespaces n ON p.namespace_id = n.id;

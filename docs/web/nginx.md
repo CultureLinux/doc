@@ -23,7 +23,7 @@ vi /root/.bashrc
 
 ## Ajout du TLS
 ### Installation de mkcert
-    dnf install curl nss-tools
+    dnf install curl nss-tools wget
     curl -s https://api.github.com/repos/FiloSottile/mkcert/releases/latest | grep browser_download_url | grep '\linux-amd64' | cut -d '"' -f 4 | wget -i -
     mv mkcert-v*-linux-amd64 /usr/bin/mkcert
     chmod 750 /usr/bin/mkcert
@@ -40,7 +40,7 @@ vi /root/.bashrc
 	#Generate "_wildcard.lab.clinux.fr+3.pem" and "_wildcard.lab.clinux.fr+3-key.pem".
 ### Modification de la configuration 
 ```
-vi /etc/nginx/nginx.conf
+    vi /etc/nginx/nginx.conf
 ```
 ```
     server {
@@ -67,7 +67,7 @@ vi /etc/nginx/nginx.conf
             location = /50x.html {
         }
     }
-```    
+```
 ### Ouverture du port
     firewall-cmd --add-port=443/tcp --permanent && firewall-cmd --reload;
 ### Redirection automatique vers https (a rajouter dans le bloc 80 - http)
