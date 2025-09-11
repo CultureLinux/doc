@@ -40,32 +40,32 @@ vi /root/.bashrc
 	#Generate "_wildcard.lab.clinux.fr+3.pem" and "_wildcard.lab.clinux.fr+3-key.pem".
 ### Modification de la configuration 
 ```
-    vi /etc/nginx/nginx.conf
+vi /etc/nginx/nginx.conf
 ```
 ```
-    server {
-        listen       443 ssl http2;
-        listen       [::]:443 ssl http2;
-        server_name  _;
-        root         /usr/share/nginx/html;
+server {
+    listen       443 ssl http2;
+    listen       [::]:443 ssl http2;
+    server_name  _;
+    root         /usr/share/nginx/html;
 
-        ssl_certificate "/etc/nginx/ssl/_wildcard.lab.clinux.fr+3.pem";
-        ssl_certificate_key "/etc/nginx/ssl/_wildcard.lab.clinux.fr+3-key.pem";
-        ssl_session_cache shared:SSL:1m;
-        ssl_session_timeout  10m;
-        ssl_ciphers PROFILE=SYSTEM;
-        ssl_prefer_server_ciphers on;
+    ssl_certificate "/etc/nginx/ssl/_wildcard.lab.clinux.fr+3.pem";
+    ssl_certificate_key "/etc/nginx/ssl/_wildcard.lab.clinux.fr+3-key.pem";
+    ssl_session_cache shared:SSL:1m;
+    ssl_session_timeout  10m;
+    ssl_ciphers PROFILE=SYSTEM;
+    ssl_prefer_server_ciphers on;
 
-        include /etc/nginx/default.d/*.conf;
+    include /etc/nginx/default.d/*.conf;
 
-        error_page 404 /404.html;
-            location = /40x.html {
-        }
-
-        error_page 500 502 503 504 /50x.html;
-            location = /50x.html {
-        }
+    error_page 404 /404.html;
+        location = /40x.html {
     }
+
+    error_page 500 502 503 504 /50x.html;
+        location = /50x.html {
+    }
+}
 ```
 ### Ouverture du port
     firewall-cmd --add-port=443/tcp --permanent && firewall-cmd --reload;
