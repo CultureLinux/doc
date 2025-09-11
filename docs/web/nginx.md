@@ -157,9 +157,11 @@ tail -f /var/log/nginx/web.lab.clinux.fr*.log
 ### SElinux pour utilisateurs 
     setsebool -P httpd_enable_homedirs 1
 ###  Vhost 
+
 ```
 vi /etc/nginx/sites-available/web-static.lab.clinux.fr.conf
 ```
+
 ```
 server {
     listen       80 ;
@@ -201,6 +203,7 @@ server {
 
 }
 ```
+
 ###  Activation 
 ```
 ln -s /etc/nginx/sites-available/web-static.lab.clinux.fr.conf /etc/nginx/sites-enable/web-static.lab.clinux.fr.conf
