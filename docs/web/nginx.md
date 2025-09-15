@@ -10,10 +10,52 @@ vi /root/.bashrc
 ```
 ```
 ...
-    alias nginxtest='nginx -t'
-    alias nginxstatus='service nginx status'
-    alias nginxrestart='nginx -t && service nginx restart'
-    alias nginxreload='nginx -t && service nginx reload'
+alias nginxtest='nginx -t'
+alias nginxstatus='service nginx status'
+alias nginxrestart='nginx -t && service nginx restart'
+alias nginxreload='nginx -t && service nginx reload'
+
+# --- Fonction pour activer un site ---
+nginxenable() {
+    if [ -f "/etc/nginx/sites-available/$1" ]; then
+        ln -s "/etc/nginx/sites-available/$1" "/etc/nginx/sites-enable/$1" && \
+        echo "Site '$1' activé." && \
+        nginx -t && \
+        systemctl reload nginx
+    else
+        echo "Erreur : le fichier '$1' n'existe pas dans /etc/nginx/sites-available/"
+    fi
+}
+
+# --- Fonction pour désactiver un site ---
+nginxdisable() {
+    if [ -L "/etc/nginx/sites-enable/$1" ]; then
+        rm "/etc/nginx/sites-enable/$1" && \
+        echo "Site '$1' désactivé." && \
+        nginx -t && \
+        systemctl reload nginx
+    else
+        echo "Erreur : le site '$1' n'est pas activé."
+    fi
+}
+
+# --- Autocomplétion pour nginxenable ---
+_nginxenable_autocomplete() {
+    local cur
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    COMPREPLY=( $(compgen -W "$(ls /etc/nginx/sites-available)" -- "$cur") )
+}
+complete -F _nginxenable_autocomplete nginxenable
+
+# --- Autocomplétion pour nginxdisable ---
+_nginxdisable_autocomplete() {
+    local cur
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    COMPREPLY=( $(compgen -W "$(ls /etc/nginx/sites-enable)" -- "$cur") )
+}
+complete -F _nginxdisable_autocomplete nginxdisable
+
+
 ```
 
 ## Test 
@@ -45,8 +87,8 @@ vi /etc/nginx/nginx.conf
 
 ```
 server {
-    listen       443 ssl http2;
-    listen       [::]:443 ssl http2;
+    listen       443 ssl http2 default;
+    listen       [::]:443 ssl http2 default;
     server_name  _;
     root         /usr/share/nginx/html;
 
@@ -56,8 +98,6 @@ server {
     ssl_session_timeout  10m;
     ssl_ciphers PROFILE=SYSTEM;
     ssl_prefer_server_ciphers on;
-
-    include /etc/nginx/default.d/*.conf;
 
     error_page 404 /404.html;
         location = /40x.html {
@@ -99,15 +139,15 @@ vi /etc/nginx/sites-available/web.lab.clinux.fr.conf
 ```
 ```
 server {
-    listen       80 default;
-    listen       [::]:80 default;
+    listen       80;
+    listen       [::]:80;
     server_name  web.lab.clinux.fr;
     return 301 https://$host$request_uri;
 }
 
 server {
-    listen       443 ssl http2 default;
-    listen       [::]:443 ssl http2 default;
+    listen       443 ssl http2;
+    listen       [::]:443 ssl http2;
     server_name  web.lab.clinux.fr;
     root         /usr/share/nginx/html;
 
