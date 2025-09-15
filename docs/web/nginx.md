@@ -10,10 +10,52 @@ vi /root/.bashrc
 ```
 ```
 ...
-    alias nginxtest='nginx -t'
-    alias nginxstatus='service nginx status'
-    alias nginxrestart='nginx -t && service nginx restart'
-    alias nginxreload='nginx -t && service nginx reload'
+alias nginxtest='nginx -t'
+alias nginxstatus='service nginx status'
+alias nginxrestart='nginx -t && service nginx restart'
+alias nginxreload='nginx -t && service nginx reload'
+
+# --- Fonction pour activer un site ---
+nginxenable() {
+    if [ -f "/etc/nginx/sites-available/$1" ]; then
+        ln -s "/etc/nginx/sites-available/$1" "/etc/nginx/sites-enable/$1" && \
+        echo "Site '$1' activé." && \
+        nginx -t && \
+        systemctl reload nginx
+    else
+        echo "Erreur : le fichier '$1' n'existe pas dans /etc/nginx/sites-available/"
+    fi
+}
+
+# --- Fonction pour désactiver un site ---
+nginxdisable() {
+    if [ -L "/etc/nginx/sites-enable/$1" ]; then
+        rm "/etc/nginx/sites-enable/$1" && \
+        echo "Site '$1' désactivé." && \
+        nginx -t && \
+        systemctl reload nginx
+    else
+        echo "Erreur : le site '$1' n'est pas activé."
+    fi
+}
+
+# --- Autocomplétion pour nginxenable ---
+_nginxenable_autocomplete() {
+    local cur
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    COMPREPLY=( $(compgen -W "$(ls /etc/nginx/sites-available)" -- "$cur") )
+}
+complete -F _nginxenable_autocomplete nginxenable
+
+# --- Autocomplétion pour nginxdisable ---
+_nginxdisable_autocomplete() {
+    local cur
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    COMPREPLY=( $(compgen -W "$(ls /etc/nginx/sites-enable)" -- "$cur") )
+}
+complete -F _nginxdisable_autocomplete nginxdisable
+
+
 ```
 
 ## Test 
