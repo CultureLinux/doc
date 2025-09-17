@@ -101,9 +101,12 @@ ifreload -a
     VM > Hardware > HD > Disk Action > Resize 
 ### Interface CLI
     qm resize VMID DISKNAME +5G
-### VM 
+### VM (ext4)
     growpart /dev/sda 1
     resize2fs /dev/sda1 
+### VM (xfs)
+    growpart /dev/sda 1
+    xfs_growfs /
 
 ## Shrink des disques durs
 ### Proxmox (seulement pour SCSI)
