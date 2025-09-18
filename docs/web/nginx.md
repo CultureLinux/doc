@@ -307,6 +307,58 @@ server {
 setsebool -P httpd_can_network_connect 1
 ```
 
+
+### Répartiteur de charge (load blancer)
+
+```
+upstream backend {
+    ip_hash;
+    server localhost:8080;
+    server localhost:8081;
+}
+
+
+server {
+    listen       80 ;
+    listen       [::]:80 ;
+    server_name  serv-port.lab.clinux.fr;
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen       443 ssl http2 ;
+    listen       [::]:443 ssl http2 ;
+    server_name  serv-port.lab.clinux.fr;
+
+    access_log /var/log/nginx/serv-port.lab.clinux.fr.access.log;
+    error_log  /var/log/nginx/serv-port.lab.clinux.fr.error.log warn;
+
+    ssl_certificate "/etc/nginx/ssl/_wildcard.lab.clinux.fr+3.pem";
+    ssl_certificate_key "/etc/nginx/ssl/_wildcard.lab.clinux.fr+3-key.pem";
+
+    ssl_session_cache shared:SSL:1m;
+    ssl_session_timeout  10m;
+    ssl_ciphers PROFILE=SYSTEM;
+    ssl_prefer_server_ciphers on;
+
+    error_page 404 /custom_errors/404.html;
+    error_page 500 502 503 504 /custom_errors/50x.html;
+
+    location /custom_errors/ {
+        alias /usr/share/nginx/html/;
+        internal;
+    }
+
+    location / {
+        proxy_pass http://backend;
+        try_files $uri $uri/ =404;
+    }
+
+}
+
+
+```
+
 ## Le cas php
 ### Utilisateur spécifique
 
