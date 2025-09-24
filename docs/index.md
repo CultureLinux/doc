@@ -2,7 +2,7 @@
 
 Bienvenue sur **doc.clinux.fr**, la documentation officielle pour le projet CLinux.
 
-![Sammy](_images/chibi-hoodie.png){ align=center }
+![Sammy](_images/chibi-hoodie.png){ align=center width=400 }
 
 ---
 
