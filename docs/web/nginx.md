@@ -475,3 +475,60 @@ server {
 php_admin_value[open_basedir] = /home/dynamic/www/:/tmp/
 php_admin_value[disable_functions] = exec,passthru,shell_exec,system,proc_open,popen,curl_exec,curl_multi_exec,parse_ini_file,show_source,dl,fsockopen,pfsockopen
 ```
+
+## Restriction
+### Basée sur IP
+
+```
+allow 192.168.1.143;
+allow 192.168.1.142;
+deny all;
+
+error_page 403 https://www.youtube.com/watch?v=dQw4w9WgXcQ&list=RDdQw4w9WgXcQ&start_radio=1 ;
+
+```
+
+### Basée sur pays (par ip)
+#### Récupértion des CIDR 
+```
+mkdir /etc/nginx/nginx-country
+wget http://firewalliplists.gypthecat.com/lists/nginx/nginx-countries.conf.zip
+unzip nginx-countries.conf.zip -d /etc/nginx/nginx-country
+```
+
+#### Exemple de vhost
+
+```
+include nginx-country/FR-allow.conf;
+include nginx-country/DE-deny.conf;
+deny all;
+```
+
+### Basée sur GeoIp
+#### Ajout du module geoip2
+
+```
+tee /etc/yum.repos.d/nginx.repo <<EOF
+[nginx-stable]
+name=nginx stable repo
+baseurl=https://nginx.org/packages/rhel/9/\$basearch/
+gpgcheck=1
+enabled=1
+gpgkey=https://nginx.org/keys/nginx_signing.key
+module_hotfixes=true
+EOF
+```
+
+```
+dnf remove nginx
+dnf install nginx
+```
+
+
+#### Récuperation des bases
+
+```
+https://www.maxmind.com/en/geolite-free-ip-geolocation-data
+```
+
+#### Configuration Nginx
