@@ -72,9 +72,11 @@
 - Parent Zone: default
 - Additionnal zone : N
 - Disable local conf : Y
+
 ```
 icinga node wizard
 ```
+
 ```
 Welcome to the Icinga 2 Setup Wizard!
 

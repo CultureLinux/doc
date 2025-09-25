@@ -6,12 +6,14 @@
     ls -l /boot/vmlinuz-*
 ```
 ### Rocky 9
+
 ```
 /boot/loader/entries/858382f092494811bf89e090de079ab1-0-rescue.conf:title Rocky Linux (0-rescue-858382f092494811bf89e090de079ab1) 9.5 (Blue Onyx)
 /boot/loader/entries/858382f092494811bf89e090de079ab1-5.14.0-503.14.1.el9_5.x86_64.conf:title Rocky Linux (5.14.0-503.14.1.el9_5.x86_64) 9.5 (Blue Onyx)
 /boot/loader/entries/a343998b88a34ce78a8a06339e65eeab-5.14.0-503.33.1.el9_5.x86_64.conf:title Rocky Linux (5.14.0-503.33.1.el9_5.x86_64) 9.5 (Blue Onyx)
 /boot/loader/entries/a343998b88a34ce78a8a06339e65eeab-0-rescue.conf:title Rocky Linux (0-rescue-a343998b88a34ce78a8a06339e65eeab) 9.5 (Blue Onyx)
 ```
+
 ### Debian 12 (proxmxo)
 ```
 grep -P "submenu|menuentry" /boot/grub/grub.cfg | cut -d "'" -f2
