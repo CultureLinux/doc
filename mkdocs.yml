@@ -9,8 +9,12 @@ theme:
   #  - navigation.tabs
   #  - navigation.tabs.sticky
   #  - navigation.indexes 
+  features:
+    - content.code.copy
 extra:
   generator: false
+
+
 
 markdown_extensions:
   - attr_list

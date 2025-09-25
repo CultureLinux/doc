@@ -4,6 +4,7 @@
 ### Installation
     apt install iptables iptables-persistent
 ### Réinitialiser toutes les règles
+
 ```
 iptables -P INPUT ACCEPT
 iptables -P FORWARD ACCEPT

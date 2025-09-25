@@ -13,9 +13,9 @@ EOF
 ```
 ### package
 ```
-    dnf install influxdb2 influxdb2-cli
-    systemctl enable --now influxdb
-    systemctl status influxdb
+dnf install influxdb2 influxdb2-cli
+systemctl enable --now influxdb
+systemctl status influxdb
 ```    
 ### Firewall
     firewall-cmd --add-port=8086/tcp --permanent

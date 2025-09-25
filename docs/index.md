@@ -1,26 +1,25 @@
 # Bienvenue sur la documentation CLinux 👋
 
-Bienvenue sur **doc.clinux.fr**, la documentation officielle pour le projet CLinux.
-
-![Sammy](_images/chibi-hoodie.png){ align=center }
+<p align="center">
+  <img src="_images/chibi-hoodie.png" alt="texte alternatif" width="200"/>
+</p>
 
 ---
 
 ## 🚀 Démarrer
 
-- [Installation](guide/installation.md) : comment installer CLinux étape par étape  
-- [Configuration](guide/configuration.md) : règle les paramètres essentiels  
-- [Utilisation](guide/utilisation.md) : mode d’emploi quotidien  
-- [API](reference/api.md) : référence complète des fonctions  
-- [Commandes](reference/commandes.md) : liste des commandes disponibles  
+- [Virtualisation](virtualization/proxmox.md): installer son homelab  avec Proxmox
+- [Opentofu](iac/opentofu.md) : automatiser le déploiment de VM
+- [Ansible](iac/ansible.md): Automatiser la configuration de son OS
+- [Le terminal](linux/environnement.md) : configuration de son terminal
+
 
 ---
 
 ## 📚 Ressources utiles
 
-- Consulte la section “Référence” pour les détails techniques  
 - Utilise la recherche (barre en haut à droite)  
-- Accède à **À propos** pour en savoir plus sur le projet
+- Regarde les vidéos explicatives sur [Youtube](https://www.youtube.com/@culturelinux/playlists)
 
 ---
 

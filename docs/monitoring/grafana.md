@@ -16,9 +16,9 @@ EOF
 ```
 ### package
 ```
-    dnf install grafana 
-    systemctl enable --now grafana-server
-    systemctl status grafana-server
+dnf install grafana 
+systemctl enable --now grafana-server
+systemctl status grafana-server
 ```    
 ### Firewall
     firewall-cmd --add-port=3000/tcp --permanent

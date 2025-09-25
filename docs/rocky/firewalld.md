@@ -22,7 +22,7 @@ firewall-cmd --add-port=53/udp --permanent
 ```
 ### PAT
 ```sh
-    firewall-cmd --list-all
+firewall-cmd --list-all
 ```
 ```sh
 firewall-cmd --add-forward-port=port=10022:proto=tcp:toport=10022:toaddr=192.168.1.20
