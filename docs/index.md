@@ -1,4 +1,4 @@
-# Bienvenue sur la documentation CLinux 👋
+# Bienvenue sur la documentation 👋
 
 <p align="center">
   <img src="_images/chibi-hoodie.png" alt="texte alternatif" width="200"/>
@@ -20,6 +20,7 @@
 
 - Utilise la recherche (barre en haut à droite)  
 - Regarde les vidéos explicatives sur [Youtube](https://www.youtube.com/@culturelinux/playlists)
+- Retrouve le code utilisé dans les vidéos [Github](https://github.com/CultureLinux?tab=repositories)
 
 ---
 
