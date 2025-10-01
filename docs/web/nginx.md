@@ -518,3 +518,112 @@ deny all;
 
 ```
 
+## Sécurité (ModSecurity)
+
+### Installation 
+
+```
+dnf install epel-release
+dnf install nginx-mod-modsecurity
+mkdir -p /etc/nginx/modsecurity /var/log/modsecurity
+```
+
+### Ajout des règles
+
+```
+cd /etc/nginx/modsecurity
+curl -sL https://github.com/coreruleset/coreruleset/archive/v4.0.0.tar.gz | tar xz 
+curl -sL https://github.com/coreruleset/coreruleset/archive/refs/tags/v4.18.0.tar.gz | tar xz 
+ln -s coreruleset-4.18.0 coreruleset
+cd coreruleset
+cp crs-setup.conf.example crs-setup.conf
+curl -so /etc/nginx/modsecurity/modsecurity.conf https://raw.githubusercontent.com/SpiderLabs/ModSecurity/v3/master/modsecurity.conf-recommended 
+```
+
+### Passage en mode strict
+
+```
+sed -i 's/SecRuleEngine DetectionOnly/SecRuleEngine On/' /etc/nginx/modsecurity/modsecurity.conf
+```
+
+### Création de la configuration modsecurity
+
+```
+vi /etc/nginx/modsecurity/main.conf
+```
+
+```
+Include /etc/nginx/modsecurity/modsecurity.conf
+Include /etc/nginx/modsecurity/coreruleset/crs-setup.conf
+Include /etc/nginx/modsecurity/coreruleset/rules/*.conf
+```
+
+### Fix de configuration pour les règles (rocky linux)
+
+```
+sed -i 's/^\(SecUnicodeMapFile unicode.mapping 20127\)/# \1/' /etc/nginx/modsecurity/modsecurity.conf
+```
+
+### Injection de modsecurity dans nginx
+
+```
+vi /etc/nginx/nginx.conf
+```
+
+```
+...
+http {
+
+    # Activer ModSecurity globalement
+    modsecurity on;
+    modsecurity_rules_file /etc/nginx/modsecurity/main.conf;
+...
+```
+
+```
+systemctl restart nginx
+```
+
+### Test de règles
+
+
+```
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ModSecurity Test</title>
+  <style>
+    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; padding: 24px; max-width:900px; }
+    code { background:#f4f4f4; padding:2px 6px; border-radius:4px; }
+    .links a { display:block; margin:8px 0; text-decoration:none; }
+    .warn { color:#b22222; font-weight:700; }
+  </style>
+</head>
+<body>
+  <h1>ModSecurity WAF — Page de test</h1>
+  <p>Page destinée à déclencher des règles ModSecurity / OWASP CRS en <strong>mode blocage</strong>.</p>
+
+  <h2>Tests (clique pour exécuter)</h2>
+  <div class="links">
+    <p><span class="warn">XSS (payload encodé dans l'URL) — test basique :</span></p>
+    <a href="/?test=%3Cscript%3Ealert('XSS')%3C%2Fscript%3E" rel="noopener noreferrer">/?test=%3Cscript%3Ealert('XSS')%3C%2Fscript%3E</a>
+
+    <p><span class="warn">SQL Injection (simple payload encodé) :</span></p>
+    <a href="/?id=1%27%20OR%20%271%27%3D%271" rel="noopener noreferrer">/?id=1%27%20OR%20%271%27%3D%271</a>
+
+  </div>
+
+  <h2>Commandes curl utiles</h2>
+  <pre>
+    <code># XSS (GET)
+    </code>
+  </pre>
+
+  <p style="margin-top:20px;">Amuse-toi (ou pleure), et check les logs. 😈🔍</p>
+</body>
+</html>
+
+```
+
