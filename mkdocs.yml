@@ -3,6 +3,7 @@ site_url: https://culturelinux.github.io/doc/
 
 theme: 
   name: material
+  language: fr
   palette:
     scheme: slate  
   #features:
