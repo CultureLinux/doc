@@ -477,6 +477,17 @@ php_admin_value[disable_functions] = exec,passthru,shell_exec,system,proc_open,p
 ```
 
 ## Restriction
+
+### Basée sur GeoIp (maxmind)
+
+#### Package (paywall)
+
+* https://docs.nginx.com/nginx/admin-guide/dynamic-modules/geoip2/
+
+#### Recompilation
+
+* https://github.com/leev/ngx_http_geoip2_module
+
 ### Basée sur IP
 
 ```
@@ -499,36 +510,11 @@ unzip nginx-countries.conf.zip -d /etc/nginx/nginx-country
 #### Exemple de vhost
 
 ```
+...
 include nginx-country/FR-allow.conf;
 include nginx-country/DE-deny.conf;
 deny all;
-```
-
-### Basée sur GeoIp
-#### Ajout du module geoip2
+...
 
 ```
-tee /etc/yum.repos.d/nginx.repo <<EOF
-[nginx-stable]
-name=nginx stable repo
-baseurl=https://nginx.org/packages/rhel/9/\$basearch/
-gpgcheck=1
-enabled=1
-gpgkey=https://nginx.org/keys/nginx_signing.key
-module_hotfixes=true
-EOF
-```
 
-```
-dnf remove nginx
-dnf install nginx
-```
-
-
-#### Récuperation des bases
-
-```
-https://www.maxmind.com/en/geolite-free-ip-geolocation-data
-```
-
-#### Configuration Nginx

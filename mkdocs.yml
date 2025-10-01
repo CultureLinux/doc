@@ -52,7 +52,9 @@ nav:
     - 'UFW' : debian/ufw.md      
     - 'NFTables' : debian/nftables.md    
   - RaspberryPi: 
-    - 'Grafana' : raspberrypi/grafana.md      
+    - 'Grafana' : raspberrypi/grafana.md     
+  - IA: 
+    - 'Ollama' : ia/ollama.md          
   - Databases: 
     - 'MariaDB' : databases/mariadb.md    
     - 'MongoDB' : databases/mongodb.md   
