@@ -172,9 +172,17 @@ Vérifie la valeur actuelle du paramètre swapiness.
 cat /proc/sys/vm/swappiness
 sysctl vm.swappiness=10
 ```
+
+Vérifie la valeur actuelle du paramètre pression du cache.
+```sh
+cat /proc/sys/vm/vfs_cache_pressure
+sysctl vm.vfs_cache_pressure=50
+```
+
 ### Seuil (permanent) ⏩
     vi /etc/sysctl.conf
     vm.swappiness=10
+    vm.vfs_cache_pressure=50
     sysctl -p
 ### Diagnostique 🚀
 Installe la commande smem pour surveiller les ressources utilisées.

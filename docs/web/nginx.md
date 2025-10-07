@@ -476,9 +476,21 @@ php_admin_value[open_basedir] = /home/dynamic/www/:/tmp/
 php_admin_value[disable_functions] = exec,passthru,shell_exec,system,proc_open,popen,curl_exec,curl_multi_exec,parse_ini_file,show_source,dl,fsockopen,pfsockopen
 ```
 
-## Restriction
+## Restriction Ip
 
-### Basée sur GeoIp (maxmind)
+### Basée sur IP
+
+```
+allow 192.168.1.143;
+allow 192.168.1.142;
+allow 192.168.1.0/24;
+deny all;
+
+error_page 403 https://www.youtube.com/watch?v=dQw4w9WgXcQ&list=RDdQw4w9WgXcQ&start_radio=1 ;
+
+```
+
+### Basée sur maxmind
 
 #### Package (paywall)
 
@@ -488,16 +500,7 @@ php_admin_value[disable_functions] = exec,passthru,shell_exec,system,proc_open,p
 
 * https://github.com/leev/ngx_http_geoip2_module
 
-### Basée sur IP
 
-```
-allow 192.168.1.143;
-allow 192.168.1.142;
-deny all;
-
-error_page 403 https://www.youtube.com/watch?v=dQw4w9WgXcQ&list=RDdQw4w9WgXcQ&start_radio=1 ;
-
-```
 
 ### Basée sur pays (par ip)
 #### Récupértion des CIDR 
@@ -525,14 +528,13 @@ deny all;
 ```
 dnf install epel-release
 dnf install nginx-mod-modsecurity
-mkdir -p /etc/nginx/modsecurity /var/log/modsecurity
+mkdir -p /etc/nginx/modsecurity
 ```
 
 ### Ajout des règles
 
 ```
 cd /etc/nginx/modsecurity
-curl -sL https://github.com/coreruleset/coreruleset/archive/v4.0.0.tar.gz | tar xz 
 curl -sL https://github.com/coreruleset/coreruleset/archive/refs/tags/v4.18.0.tar.gz | tar xz 
 ln -s coreruleset-4.18.0 coreruleset
 cd coreruleset
@@ -555,6 +557,7 @@ vi /etc/nginx/modsecurity/main.conf
 ```
 Include /etc/nginx/modsecurity/modsecurity.conf
 Include /etc/nginx/modsecurity/coreruleset/crs-setup.conf
+
 Include /etc/nginx/modsecurity/coreruleset/rules/*.conf
 ```
 
