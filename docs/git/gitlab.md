@@ -79,46 +79,58 @@ Installer la meme version de gitlab que celle du backup à restorer
 Une fois l'upgrade fait, il faut attendre la fin des background migrations
 
 ## Small config 
-``` /etc/gitlab/gitlab.rb
-    alertmanager['enable'] = false
-    gitlab_exporter['enable'] = false
-    gitlab_kas['enable'] = false
-    node_exporter['enable'] = false
-    postgres_exporter['enable'] = false
-    prometheus['enable'] = false
-    redis_exporter['enable'] = false
+
+``` 
+/etc/gitlab/gitlab.rb
+alertmanager['enable'] = false
+gitlab_exporter['enable'] = false
+gitlab_kas['enable'] = false
+node_exporter['enable'] = false
+postgres_exporter['enable'] = false
+prometheus['enable'] = false
+redis_exporter['enable'] = false
 ```
 
 ## CI-CD
 ### Install runner 
-    curl -L --output /usr/local/bin/gitlab-runner "https://s3.dualstack.us-east-1.amazonaws.com/gitlab-runner-downloads/latest/binaries/gitlab-runner-linux-amd64"
-    chmod +x /usr/local/bin/gitlab-runner
-    useradd --comment 'GitLab Runner' --create-home gitlab-runner --shell /bin/bash
-    gitlab-runner install --user=gitlab-runner --working-directory=/home/gitlab-runner
-    gitlab-runner start
+
+```
+curl -L --output /usr/local/bin/gitlab-runner "https://s3.dualstack.us-east-1.amazonaws.com/gitlab-runner-downloads/latest/binaries/gitlab-runner-linux-amd64"
+chmod +x /usr/local/bin/gitlab-runner
+useradd --comment 'GitLab Runner' --create-home gitlab-runner --shell /bin/bash
+gitlab-runner install --user=gitlab-runner --working-directory=/home/gitlab-runner
+gitlab-runner start
+```
+
 ### Register (v17.x)
 #### webui
+
 * https://git.local.clinux.fr/admin/runners/new    
-* Add tag (my-cd-tag)
+* Ajout d'un tag (my-cd-tag)
+
 #### runner 
     
 
-
 ## CLI glab
 ### install 
-    wget https://gitlab.com/gitlab-org/cli/-/releases/v1.45.0/downloads/glab_1.45.0_Linux_x86_64.tar.gz
-    tar xvzf glab_*_Linux_x86_64.tar.gz
-    mv bin/glab /usr/local/bin/
+
+```
+wget https://gitlab.com/gitlab-org/cli/-/releases/v1.45.0/downloads/glab_1.45.0_Linux_x86_64.tar.gz
+tar xvzf glab_*_Linux_x86_64.tar.gz
+mv bin/glab /usr/local/bin/
+```
 
 ### Login 
-    glab auth login --hostname gitlab.fqdn --stdin < ~/.gitlab.token
+```
+glab auth login --hostname gitlab.fqdn --stdin < ~/.gitlab.token
+```
 
 ### Clean pipelines
 ```
-    glab ci delete --status success --repo git.clinux.lan/GROUP/REPO
+ glab ci delete --status success --repo git.clinux.lan/GROUP/REPO
 ```
 ```
-    docker exec --user git -it sameersbn-gitlab-gitlab-1 bundle exec rake gitlab:cleanup:orphan_job_artifact_files DRY_RUN=false RAILS_ENV=production
+docker exec --user git -it sameersbn-gitlab-gitlab-1 bundle exec rake gitlab:cleanup:orphan_job_artifact_files DRY_RUN=false RAILS_ENV=production
 ```
 ###  Pipeline
 #### list
