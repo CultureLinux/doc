@@ -587,6 +587,15 @@ http {
 systemctl restart nginx
 ```
 
+### Desactivation pour une zone de vhost
+
+```
+location /api/legacy {
+    modsecurity off;
+    proxy_pass http://backend;
+}
+```
+
 ### Test de règles
 
 
@@ -620,7 +629,11 @@ systemctl restart nginx
 
   <h2>Commandes curl utiles</h2>
   <pre>
-    <code># XSS (GET)
+    <code># Scan sqlmap
+        curl -k -A sqlmap  https://web-static.lab.clinux.fr
+    </code>
+    <code># Protection /admin
+        curl -k https://web-static.lab.clinux.fr/admin
     </code>
   </pre>
 
@@ -628,5 +641,50 @@ systemctl restart nginx
 </body>
 </html>
 
+```
+
+### Règles custom
+
+#### Structure 
+
+```
+SecRule VARIABLES "OPERATOR" "ACTIONS"
+```
+
+* VARIABLES : Où chercher (ARGS, HEADERS, REQUEST_BODY...)
+* OPERATOR : Comment chercher (regex, @rx, @contains...)
+* ACTIONS : Que faire (log, deny, pass, block...)
+
+#### Exemples
+[Guide d'écriture de règles](https://coreruleset.org/docs/3-about-rules/creating/)
+
+##### Blocage par User-Agent
+
+```
+# Bloquer les scans sqlmap
+# Test : curl -A sqlmap  https://web-static.lab.clinux.fr
+SecRule REQUEST_HEADERS:User-Agent "@contains sqlmap" \
+    "id:10001,\
+    phase:1,\
+    deny,\
+    status:403,\
+    log,\
+    msg:'SQLMap bot détecté'"
+```
+
+######  Blocage par IP pour un route
+
+```
+# Bloquer les accès /admin pour une IP
+# Test : curl -k  https://web-static.lab.clinux.fr/admin
+SecRule REQUEST_URI "@rx ^/admin" \
+    "id:10002,\
+    phase:1,\
+    deny,\
+    status:403,\
+    chain,\
+    log,\
+    msg:'Admin access from unauthorized IP '"
+    SecRule REMOTE_ADDR "!@ipMatch 192.168.1.143"
 ```
 
