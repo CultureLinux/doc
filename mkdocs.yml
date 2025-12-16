@@ -35,7 +35,8 @@ nav:
     - 'Stockage' : linux/storage.md  
     - 'Utilisateurs' : linux/users.md    
     - 'Sudoers' : linux/sudoers.md            
-    - 'Permissions' : linux/permissions.md            
+    - 'Permissions' : linux/permissions.md     
+    - 'Cron' : linux/crontab.md                 
     - 'Nmap' : linux/nmap.md
     - 'Security' : linux/security.md        
     - 'Gnome' : linux/gnome.md       
