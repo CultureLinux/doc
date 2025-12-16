@@ -30,6 +30,10 @@
     firewall-cmd --zone=public --add-service=ssh
     firewall-cmd --runtime-to-permanent
 
+## Update
+### Rocky
+    dnf update -x gitlab-ce
+    dnf update gitlab-ce-18.2.8-ce.0.el9
 ## Setup (omnibus)
 ### Url
 ```
