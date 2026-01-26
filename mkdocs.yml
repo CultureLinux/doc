@@ -76,11 +76,14 @@ nav:
     - 'Docker' : containers/docker.md
   - Security:
     - 'Iptables' : security/iptables.md    
-    - 'Lets Encrypt' : security/letsencrypt.md        
     - 'SSH' : security/ssh.md       
     - 'WireGuard' : security/wireguard.md    
-    - 'GPG' : security/gpg.md  
-    - 'StepCA' : security/stepca.md        
+    - 'GPG' : security/gpg.md    
+    - 'SSL/TLS' : 
+      - 'MKcert' : security/tls/mkcert.md        
+      - 'Lets Encrypt' : security/tls/letsencrypt.md    
+      - 'StepCA' : security/tls/stepca.md      
+
   - Git:
     - 'CLI' : git/git.md    
     - 'Gitlab' : git/gitlab.md        
