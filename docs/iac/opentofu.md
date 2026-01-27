@@ -1,6 +1,6 @@
 # OpenTofu
 ## Github
-    wget https://github.com/opentofu/opentofu/releases/download/v1.9.1/tofu_1.9.1_linux_amd64.zip
+    wget https://github.com/opentofu/opentofu/releases/download/v1.11.1/tofu_1.11.1_linux_amd64.zip
     unzip tofu*
     cp tofu /usr/local/bin/
 
@@ -141,3 +141,8 @@
             }
         }
     }
+
+## Outils 
+
+### Linter 
+    
