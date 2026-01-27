@@ -28,8 +28,9 @@ curl -s https://api.github.com/repos/FiloSottile/mkcert/releases/latest \
 Installation du binaire dans le PATH système 🔒
 
 ```bash
-mv mkcert-v*-linux-amd64 /usr/local/bin/mkcert
-chmod 755 /usr/local/bin/mkcert
+mkdir ~/.local/bin
+mv mkcert-v*-linux-amd64 ~/.local/bin/mkcert
+chmod 755 ~/.local/bin/mkcert
 ```
 
 ---
@@ -89,6 +90,16 @@ Solution complète :
 ```bash
 mkcert "lab.clinux.fr" "*.lab.clinux.fr"
 ```
+
+## Transfert le l'autorité de certification
+
+On recupère le fichier `rootCA.pem` et on le transfère sur le poste, puis on l'injecte dans les autorités locales.
+
+```bash
+sudo cp rootCA.pem /etc/pki/ca-trust/source/anchors/
+update-ca-trust
+```
+
 
 ---
 
