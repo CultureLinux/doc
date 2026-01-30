@@ -68,7 +68,8 @@ nav:
     - 'InfluxDB' : monitoring/influxdb.md    
     - 'Grafana' : monitoring/grafana.md            
   - Virtualization:
-    - 'Proxmox' : virtualization/proxmox.md      
+    - 'Proxmox' : virtualization/proxmox.md  
+    - 'PVE automator' :  virtualization/pve-automator.md
   - 'Infra As Code': 
     - 'Ansible' : iac/ansible.md      
     - 'OpenToFu' : iac/opentofu.md   
