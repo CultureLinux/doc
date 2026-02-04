@@ -1,20 +1,64 @@
-# Génération🚀
-Cette section offre des commandes pour générer et gérer des certificats SSL à l'aide de Certbot et Lego.
+# Let's encrypt
 
-## Certbot🔒
-Cette sous-section explique comment utiliser Certbot pour la génération, le renouvellement et la suppression de certificats.
+## Installation 🚀
 
-### Nouveau 🔑
-Génère un nouveau certificat SSL avec Certbot en testant d'abord avec une simulation, puis effectue la génération réelle.
+Installation standard via le manager de paquet dnf.
+
 ```sh
-certbot certonly --agree-tos --email your@email.dom --webroot -w /var/lib/letsencrypt/ -d vhost.email.dom --dry-run
-certbot certonly --agree-tos --email your@email.dom --webroot -w /var/lib/letsencrypt/ -d vhost.email.dom
+dnf install epel-release
+dnf install certbot
+```
+## Certbot 🔒
+
+### Gestion du compte
+#### Verifier l'etat
+
+```sh
+certbot show_account
 ```
 
-### Lister 📚
-Liste tous les certificats SSL gérés par Certbot.
+#### Enregistrer un compte 
+
 ```sh
-certbot certificates
+certbot register --agree-tos -m dev@clinux.fr
+```
+
+#### Supprimer un compte
+
+```sh
+certbot unregister
+```
+
+### Gestion des certificats
+
+#### Lister les certificats 📚
+Liste tous les certificats SSL gérés par Certbot.
+
+```sh
+certbot certificates 
+```
+
+### Ne pas se faire bannir
+
+Il faut ajouter l'option `--dry-run` aux commandes de création des certificats pour tester la configuration.
+
+### Créer un certificat manuellement 🔑 (challenge http port 80 ouvert)
+
+```sh
+certbot certonly --email dev@clinux.fr --webroot -w /var/lib/letsencrypt/ -d lab.online.clinux.fr --dry-run
+```
+
+### Créer un certificat avec un plugin 🔑 (challenge http port 80 ouvert)
+
+```sh
+dnf install -y certbot python3-certbot-nginx
+certbot
+```
+
+### Créer un certificat wildcard 🔑 (challenge dns)
+
+```sh
+certbot certonly --manual --preferred-challenges dns -d lab.online.clinux.fr
 ```
 
 ### Renouveler 🔄
@@ -23,46 +67,14 @@ Renouvelle tous les certificats SSL gérés par Certbot.
 certbot renew
 ```
 
+### Révoquer 🧨
+Revoquer un certificat
+```sh
+certbot revoke --cert-name lab.online.clinux.fr
+```
+
 ### Supprimer 🚫
 Supprime un certificat SSL spécifique avec Certbot.
 ```sh
-certbot delete --cert-name vhost.email.dom
-```
-
-## Lego🌐
-Cette sous-section explique comment utiliser Lego pour la génération et la gestion de certificats avec différents fournisseurs DNS.
-
-### install📦
-Installe Lego en téléchargeant la version la plus récente, l'extraittez et exécutez-le.
-```sh
-wget https://github.com/go-acme/lego/releases/download/v4.16.1/lego_v4.16.1_linux_amd64.tar.gz
-tar xvzf lego_v4.16.1_linux_amd64.tar.gz
-./lego
-```
-
-### providers📖
-Fournit un lien vers la documentation pour configurer les fournisseurs DNS avec Lego.
-```sh
-https://go-acme.github.io/lego/dns/
-```
-
-### OVH 🖥️
-Montre comment configurer et utiliser Lego avec le fournisseur DNS OVH.
-```sh
-export OVH_APPLICATION_KEY=xxxxxxxxxxx
-export OVH_APPLICATION_SECRET=xxxxxxxxxxxxxxxxxxxxxxx 
-export OVH_CONSUMER_KEY=xxxxxxxxxxxxxx
-export OVH_ENDPOINT=ovh-eu
-
-./lego --email your@email.dom --dns ovh --domains vhost.email.dom run
-ls -l .lego/certificates/vhost.email.dom.{crt,key}
-./lego --email your@email.dom --dns ovh --domains *.email.dom run
-ls -l .lego/certificates/_.email.dom.{crt,key}
-```
-
-### Ionos 🖥️
-Montre comment configurer et utiliser Lego avec le fournisseur DNS Ionos.
-```sh
-IONOS_API_KEY=xxxxxxxxxxxxxxxxxxxxxxx
-./lego --email your@email.dom --dns ionos --domains vhost.email.dom run
+certbot delete --cert-name lab.online.clinux.fr
 ```
