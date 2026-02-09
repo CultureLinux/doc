@@ -83,6 +83,7 @@ nav:
     - 'SSL/TLS' : 
       - 'MKcert' : security/tls/mkcert.md        
       - 'Lets Encrypt' : security/tls/letsencrypt.md    
+      - 'Lego' : security/tls/lego.md
       - 'StepCA' : security/tls/stepca.md      
 
   - Git:
