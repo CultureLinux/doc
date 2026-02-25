@@ -233,8 +233,8 @@ step ca certificate web.lab.clinux.fr \
 ### Test du certificat
 
 ```
-step certificate inspect test.clinux.lan.crt --short
-step certificate inspect test.clinux.lan.crt
+step certificate inspect web.lab.clinux.fr.crt --short
+step certificate inspect web.lab.clinux.fr.crt
 ```
 
 ### Emplacement du certificat root du CA
@@ -247,7 +247,7 @@ cp ~/.step/certs/root_ca.crt /etc/nginx/ssl/
 
 ```
 step ca certificate \
-  client1.clinux.lan \
+  client1 \
   client1.crt \
   client1.key \
   --provisioner fleet-provisioner \
@@ -265,6 +265,25 @@ step certificate p12 client1.p12 client1.crt client1.key
 ```
 openssl pkcs12 -in client1.p12 -nokeys | openssl x509 -text -noout
 ```
+
+### Renouvelement
+
+#### Configuration (serveur)
+
+```
+"disableRenewal"=false
+"allowRenewalAfterExpiry": false
+```
+
+#### Renouvellment de certificat
+
+```
+step ca renew web.lab.clinux.fr.crt web.lab.clinux.fr.key
+step ca renew web.lab.clinux.fr.crt web.lab.clinux.fr.key --force
+step ca renew web.lab.clinux.fr.crt web.lab.clinux.fr.key --generate-key
+```
+
+
 
 ### Protection d'un vhost nginx
 
