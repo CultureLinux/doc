@@ -184,6 +184,30 @@ Attention la version du protocole est 3
 ### Interface Cli
     pvesm add cifs syno --server $(IP/DNS) --share $(SHARE NAME) --username $(USERNAME) --password $(PASSWORD) --content images,iso,backup
 
+### LVM-Thin
+
+```
+#fdisk /dev/sda
+pvcreate /dev/sda
+vgcreate vg_drive2 /dev/sda
+lvcreate -l 100%FREE -T vg_drive2/data
+```
+
+```
+vi /etc/pve/storage.cfg
+```
+
+```
+lvmthin: drive2
+        thinpool data
+        vgname vg_drive2
+        content images,rootdir
+```
+
+```
+systemctl restart pvedaemon pveproxy
+```
+
 ## Serveur de métriques
 ### influxdb2
 #### Installation
