@@ -188,7 +188,7 @@ Attention la version du protocole est 3
 ### Interface Cli
     pvesm add cifs syno --server $(IP/DNS) --share $(SHARE NAME) --username $(USERNAME) --password $(PASSWORD) --content images,iso,backup
 
-###  NFS (stockage block)
+###  NFS 
 
 ```
 pvesm add nfs \
@@ -221,6 +221,29 @@ lvmthin: drive2
 
 ```
 systemctl restart pvedaemon pveproxy
+```
+
+### Passage a ZFS 
+
+Si on est en LVM thin
+
+```
+lvremove vg_drive2/data
+vgremove vg_drive2
+pvremove /dev/sda
+```
+
+Création d'un disque en ZFS
+
+```
+zpool create -f zfs-vm /dev/sda
+zfs set compression=lz4 zfs-vm
+```
+
+Ajout dans l'UI ou CLI
+
+```
+pvesm add zfspool zfs-vm --pool zfs-vm --content images
 ```
 
 ## Serveur de métriques
@@ -378,6 +401,65 @@ Content-Type : application/json
     apt install corosync-qnetd
     systemctl enable corosync-qnetd --now
     systemctl status corosync-qnetd
+
+### IP virtuelle
+
+Sur chaque node 
+
+```
+apt install keepalived
+```
+
+Sur le 'master'
+
+
+```
+cat <<EOF > /etc/keepalived/keepalived.conf
+vrrp_instance VI_1 {
+    state MASTER
+    interface vmbr0
+    virtual_router_id 51
+    priority 150
+    advert_int 1
+
+    authentication {
+        auth_type PASS
+        auth_pass 1234
+    }
+
+    virtual_ipaddress {
+        192.168.1.100
+    }
+}
+EOF
+```
+Sur le 'secondaire'
+
+```
+cat <<EOF > /etc/keepalived/keepalived.conf
+vrrp_instance VI_1 {
+    state BACKUP
+    interface vmbr0
+    virtual_router_id 51
+    priority 100
+    advert_int 1
+
+    authentication {
+        auth_type PASS
+        auth_pass 1234
+    }
+
+    virtual_ipaddress {
+        192.168.1.100
+    }
+}
+```
+
+Sur chaque node 
+
+```
+systemctl enable keepalived --now
+```
 
 ## Upgrade
 ### PVE 8 > 9 
