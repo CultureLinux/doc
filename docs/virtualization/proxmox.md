@@ -177,12 +177,51 @@ ifreload -a
     free -m
 
 ## Stockage
+
 ### Samba (SMB)
+
 #### Interface Graphique
+
 Attention la version du protocole est 3
     Datacenter > Storage > SMB/CIFS
+
 ### Interface Cli
     pvesm add cifs syno --server $(IP/DNS) --share $(SHARE NAME) --username $(USERNAME) --password $(PASSWORD) --content images,iso,backup
+
+###  NFS (stockage block)
+
+```
+pvesm add nfs \
+    prox-nfs   \
+    --server 192.168.1.10     \
+    --export /volume1/PROX-HA     \
+    --content images,iso,backup,vztmpl     \
+    --options vers=3
+```
+
+### LVM-Thin
+
+```
+#fdisk /dev/sda
+pvcreate /dev/sda
+vgcreate vg_drive2 /dev/sda
+lvcreate -l 100%FREE -T vg_drive2/data
+```
+
+```
+vi /etc/pve/storage.cfg
+```
+
+```
+lvmthin: drive2
+        thinpool data
+        vgname vg_drive2
+        content images,rootdir
+```
+
+```
+systemctl restart pvedaemon pveproxy
+```
 
 ## Serveur de métriques
 ### influxdb2
@@ -333,6 +372,12 @@ Content-Type : application/json
 
     killall pmxcfs
     systemctl start pve-cluster
+
+### Ajouter un faux proxmox (qdevice)
+
+    apt install corosync-qnetd
+    systemctl enable corosync-qnetd --now
+    systemctl status corosync-qnetd
 
 ## Upgrade
 ### PVE 8 > 9 
