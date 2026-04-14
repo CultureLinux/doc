@@ -3,6 +3,7 @@
 ## Installation 
 
 ```
+dnf config-manager --set-enabled crb
 dnf install opendkim opendkim-tools -y
 ```
 
@@ -113,6 +114,14 @@ smtps inet n       -       n       -       -       smtpd
   -o smtpd_milters=inet:localhost:8891
   -o non_smtpd_milters=inet:localhost:8891
 ```
+
+## Application
+
+```
+systemctl enable opendkim --now
+service postfix restart
+```
+
 
 ## DNS 
 
