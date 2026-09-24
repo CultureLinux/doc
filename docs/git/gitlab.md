@@ -61,9 +61,229 @@
     cat /etc/gitlab/initial_root_password
 
 ## Backup 
+### Manuel 
+
+```
     gitlab-backup create
     tar cvzf gitlab-conf.tar.gz /etc/gitlab/*
     scp {/var/opt/gitlab/backups/*,gitlab-conf.tar.gz}  backup@backup_server:/path/
+```
+### Service 
+
+```
+vi /etc/systemd/system/gitlab-backup.service
+```
+
+```
+[Unit]
+Description=GitLab backup and remote synchronization
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/gitlab-backup.sh
+TimeoutStartSec=infinity
+Nice=10
+IOSchedulingClass=best-effort
+IOSchedulingPriority=7
+```
+
+### Timer 
+
+```
+vi /etc/systemd/system/gitlab-backup.timer
+```
+
+```
+[Unit]
+Description=Daily GitLab backup
+
+[Timer]
+OnCalendar=*-*-* 03:00:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+```
+
+### Script
+
+```
+vi /usr/local/sbin/gitlab-backup.sh
+```
+
+```
+#!/bin/bash
+set -euo pipefail
+
+BACKUP_DIR="/var/opt/gitlab/backups"
+DATE="$(date +%Y%m%d-%H%M%S)"
+
+# Destination distante
+REMOTE_USER="root"
+REMOTE_HOST="192.168.1.33"
+REMOTE_DIR="/mnt/nas/backup/gitlab"
+
+# Rétention
+LOCAL_KEEP=5
+REMOTE_RETENTION_DAYS=30
+
+echo "============================================================"
+echo " GitLab backup - $(date)"
+echo "============================================================"
+
+#
+# 1. Backup GitLab
+#
+
+echo
+echo "[1/5] Backup GitLab data..."
+
+/opt/gitlab/bin/gitlab-backup create
+
+#
+# 2. Backup configuration + secrets
+#
+
+echo
+echo "[2/5] Backup configuration + secrets..."
+
+/opt/gitlab/bin/gitlab-ctl backup-etc \
+    --backup-path "$BACKUP_DIR"
+
+# Récupère le dernier backup de configuration créé
+CONFIG_BACKUP="$(
+    find "$BACKUP_DIR" \
+        -maxdepth 1 \
+        -type f \
+        -name '*gitlab_config*.tar' \
+        -printf '%T@ %p\n' |
+    sort -nr |
+    head -1 |
+    cut -d' ' -f2-
+)"
+
+if [[ -z "${CONFIG_BACKUP:-}" || ! -f "$CONFIG_BACKUP" ]]; then
+    echo "ERREUR: backup de configuration GitLab introuvable"
+    exit 1
+fi
+
+CONFIG_DEST="${BACKUP_DIR}/gitlab_config_${DATE}.tar"
+
+mv "$CONFIG_BACKUP" "$CONFIG_DEST"
+
+echo "Configuration sauvegardée : $CONFIG_DEST"
+
+#
+# 3. Synchronisation vers le NAS
+#
+
+echo
+echo "[3/5] Synchronisation distante..."
+
+ssh "${REMOTE_USER}@${REMOTE_HOST}" \
+    "mkdir -p '${REMOTE_DIR}'"
+
+# IMPORTANT :
+# pas de --delete
+# Les anciens backups distants restent donc présents.
+rsync -avh --partial \
+    "${BACKUP_DIR}/" \
+    "${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_DIR}/"
+
+echo "Synchronisation distante terminée."
+
+#
+# 4. Rétention locale
+#
+
+echo
+echo "[4/5] Rétention locale : conservation des ${LOCAL_KEEP} derniers backups..."
+
+#
+# Backup GitLab data
+#
+
+mapfile -t DATA_BACKUPS < <(
+    find "$BACKUP_DIR" \
+        -maxdepth 1 \
+        -type f \
+        -name '*_gitlab_backup.tar' \
+        -printf '%T@ %p\n' |
+    sort -nr |
+    cut -d' ' -f2-
+)
+
+if (( ${#DATA_BACKUPS[@]} > LOCAL_KEEP )); then
+
+    for FILE in "${DATA_BACKUPS[@]:LOCAL_KEEP}"; do
+        echo "Suppression locale : $FILE"
+        rm -f -- "$FILE"
+    done
+
+fi
+
+#
+# Backup configuration
+#
+
+mapfile -t CONFIG_BACKUPS < <(
+    find "$BACKUP_DIR" \
+        -maxdepth 1 \
+        -type f \
+        -name 'gitlab_config_*.tar' \
+        -printf '%T@ %p\n' |
+    sort -nr |
+    cut -d' ' -f2-
+)
+
+if (( ${#CONFIG_BACKUPS[@]} > LOCAL_KEEP )); then
+
+    for FILE in "${CONFIG_BACKUPS[@]:LOCAL_KEEP}"; do
+        echo "Suppression locale : $FILE"
+        rm -f -- "$FILE"
+    done
+
+fi
+
+#
+# 5. Rétention distante
+#
+
+echo
+echo "[5/5] Rétention distante : ${REMOTE_RETENTION_DAYS} jours..."
+
+ssh "${REMOTE_USER}@${REMOTE_HOST}" "
+    find '${REMOTE_DIR}' \
+        -maxdepth 1 \
+        -type f \
+        \( -name '*_gitlab_backup.tar' -o -name 'gitlab_config_*.tar' \) \
+        -mtime +${REMOTE_RETENTION_DAYS} \
+        -print \
+        -delete
+"
+
+echo
+echo "Backups locaux présents :"
+ls -lh "$BACKUP_DIR"
+
+echo
+echo "============================================================"
+echo " GitLab backup terminé avec succès - $(date)"
+echo "============================================================"
+```
+
+### Application 
+
+```
+chmod 750 /usr/local/sbin/gitlab-backup.sh
+
+systemctl daemon-reload
+systemctl enable --now gitlab-backup.timer
+systemctl list-timers gitlab-backup.timer
+```
+
 
 ## Restore
 Installer la meme version de gitlab que celle du backup à restorer
@@ -85,14 +305,93 @@ Une fois l'upgrade fait, il faut attendre la fin des background migrations
 ## Small config 
 
 ``` 
-/etc/gitlab/gitlab.rb
+vi /etc/gitlab/gitlab.rb
+``` 
+``` 
+###############################################################################
+# GitLab Homelab
+# 3 vCPU / 2.5 Go RAM
+###############################################################################
+
+external_url 'https://gitlab.local.clinux.fr'
+
+###############################################################################
+# NGINX
+###############################################################################
+
+nginx['enable'] = true
+nginx['redirect_http_to_https'] = true
+nginx['ssl_certificate'] = "/etc/gitlab/ssl/_.local.clinux.fr.crt"
+nginx['ssl_certificate_key'] = "/etc/gitlab/ssl/_.local.clinux.fr.key"
+
+###############################################################################
+# PUMA
+# Mode single process pour limiter fortement la consommation mémoire.
+###############################################################################
+
+puma['worker_processes'] = 0
+puma['min_threads'] = 1
+puma['max_threads'] = 4
+
+###############################################################################
+# SIDEKIQ
+# Peu de jobs simultanés : suffisant pour un GitLab homelab.
+###############################################################################
+
+sidekiq['concurrency'] = 5
+
+###############################################################################
+# POSTGRESQL
+###############################################################################
+
+postgresql['shared_buffers'] = "128MB"
+postgresql['work_mem'] = "8MB"
+postgresql['maintenance_work_mem'] = "64MB"
+postgresql['effective_cache_size'] = "1GB"
+postgresql['max_worker_processes'] = 4
+
+###############################################################################
+# GITALY
+# Limitation de la concurrence des opérations Git lourdes.
+###############################################################################
+
+gitaly['configuration'] = {
+  concurrency: [
+    {
+      'rpc' => '/gitaly.SmartHTTPService/PostReceivePack',
+      'max_per_repo' => 2
+    },
+    {
+      'rpc' => '/gitaly.SSHService/SSHReceivePack',
+      'max_per_repo' => 2
+    }
+  ]
+}
+
+###############################################################################
+# MONITORING
+###############################################################################
+
 alertmanager['enable'] = false
 gitlab_exporter['enable'] = false
-gitlab_kas['enable'] = false
 node_exporter['enable'] = false
 postgres_exporter['enable'] = false
 prometheus['enable'] = false
 redis_exporter['enable'] = false
+
+###############################################################################
+# SERVICES NON UTILISES
+###############################################################################
+
+# Kubernetes Agent Server
+gitlab_kas['enable'] = false
+
+# Mattermost
+mattermost['enable'] = false
+
+# GitLab Pages
+gitlab_pages['enable'] = false
+pages_nginx['enable'] = false
 ```
 
 ## CI-CD
@@ -183,3 +482,33 @@ docker exec --user git -it sameersbn-gitlab-gitlab-1 bundle exec rake gitlab:cle
     JOIN deploy_keys_projects dkp ON k.id = dkp.deploy_key_id
     JOIN projects p ON dkp.project_id = p.id
     JOIN namespaces n ON p.namespace_id = n.id;
+
+## Migration sameersbn > rocky9 rpm
+### Deplacement des clés 
+#### sameer
+
+```
+cd /home/docky/DockerVault/gitlab/data-gitlab/ssh/
+
+scp \
+  ssh_host_ecdsa_key ssh_host_ecdsa_key.pub \
+  ssh_host_ed25519_key ssh_host_ed25519_key.pub \
+  ssh_host_rsa_key ssh_host_rsa_key.pub \
+  root@192.168.1.180:/etc/ssh/
+```
+
+#### rocky9
+
+```
+chown root:ssh_keys /etc/ssh/ssh_host_{ecdsa,ed25519,rsa}_key
+chmod 640 /etc/ssh/ssh_host_{ecdsa,ed25519,rsa}_key
+
+chown root:root /etc/ssh/ssh_host_{ecdsa,ed25519,rsa}_key.pub
+chmod 644 /etc/ssh/ssh_host_{ecdsa,ed25519,rsa}_key.pub
+
+restorecon -v /etc/ssh/ssh_host_{ecdsa,ed25519,rsa}_key*
+
+systemctl restart sshd
+systemctl status sshd --no-pager
+```
+
