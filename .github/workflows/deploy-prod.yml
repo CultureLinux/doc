@@ -8,7 +8,9 @@ on:
 jobs:
   deploy:
     name: Deploy to production
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    env:
+      DEPLOY_PATH: /home/hosting/clinuxdoc/doc
     steps:
       - name: Configure SSH
         run: |
@@ -20,15 +22,19 @@ jobs:
             HostName $SSH_HOST
             User $SSH_USER
             IdentityFile ~/.ssh/production.key
+            BatchMode yes
+            ConnectTimeout 15
             StrictHostKeyChecking no
           END
         env:
           SSH_USER: ${{ secrets.SSH_USER }}
           SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           SSH_HOST: ${{ secrets.SSH_HOST }}
+      - name: Check SSH access
+        run: ssh production "echo 'SSH OK' && test -d '$DEPLOY_PATH'"
       - name: Pull new changes
-        run: ssh production 'cd /home/hosting/clinuxdoc/doc && git pull --ff-only'
+        run: ssh production "cd '$DEPLOY_PATH' && git pull --ff-only"
       - name: Install dependencies
-        run: ssh production 'cd /home/hosting/clinuxdoc/doc && . venv/bin/activate && pip install -r requirements.txt'
+        run: ssh production "cd '$DEPLOY_PATH' && . venv/bin/activate && pip install -r requirements.txt"
       - name: Rebuild site
-        run: ssh production 'cd /home/hosting/clinuxdoc/doc && . venv/bin/activate && mkdocs build --clean --strict'
+        run: ssh production "cd '$DEPLOY_PATH' && . venv/bin/activate && mkdocs build --clean --strict"
