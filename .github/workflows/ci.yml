@@ -1,13 +1,15 @@
-name: ci 
+name: CI
 
 on:
   push:
     branches:
       - main
-permissions:
-  contents: write
+  pull_request:
+    branches:
+      - main
+
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -15,14 +17,11 @@ jobs:
         with:
           python-version: 3.x
       - run: echo "cache_id=$(date --utc '+%V')" >> $GITHUB_ENV 
-
-
       - uses: actions/cache@v3
         with:
           key: mkdocs-material-${{ env.cache_id }}
           path: .cache
           restore-keys: |
             mkdocs-material-
-      - run: pip install mkdocs-material 
-      - run: mkdocs build
-      - run: mkdocs gh-deploy --force
+      - run: pip install -r requirements.txt
+      - run: mkdocs build --strict

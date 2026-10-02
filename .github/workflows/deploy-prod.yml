@@ -1,35 +1,34 @@
-name: Deploy_Prod
+name: Deploy Prod
+
 on:
   push:
     branches:
       - main
+
 jobs:
   deploy:
-    name: "Deploy to staging"
+    name: Deploy to production
     runs-on: ubuntu-latest
-    # needs: test
     steps:
       - name: Configure SSH
         run: |
           mkdir -p ~/.ssh/
-          echo "$SSH_KEY" > ~/.ssh/staging.key
-          chmod 600 ~/.ssh/staging.key
+          echo "$SSH_KEY" > ~/.ssh/production.key
+          chmod 600 ~/.ssh/production.key
           cat >>~/.ssh/config <<END
-          Host staging
+          Host production
             HostName $SSH_HOST
             User $SSH_USER
-            IdentityFile ~/.ssh/staging.key
+            IdentityFile ~/.ssh/production.key
             StrictHostKeyChecking no
           END
         env:
           SSH_USER: ${{ secrets.SSH_USER }}
           SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           SSH_HOST: ${{ secrets.SSH_HOST }}
-#      - name: get id
-#        run: ssh staging 'id'        
-#      - name: get pwd
-#        run: ssh staging 'pwd'        
-      - name: pull new change 
-        run: ssh staging 'cd doc && git pull'                
-      - name: rebuild site 
-        run: ssh staging 'cd doc && rm -rf site && . venv/bin/activate ; mkdocs build'               
+      - name: Pull new changes
+        run: ssh production 'cd /home/hosting/clinuxdoc/doc && git pull --ff-only'
+      - name: Install dependencies
+        run: ssh production 'cd /home/hosting/clinuxdoc/doc && . venv/bin/activate && pip install -r requirements.txt'
+      - name: Rebuild site
+        run: ssh production 'cd /home/hosting/clinuxdoc/doc && . venv/bin/activate && mkdocs build --clean --strict'
