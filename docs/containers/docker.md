@@ -1,4 +1,4 @@
-# Docker
+# 🚀 Docker
 
 Docker permet d’exécuter des applications dans des **conteneurs** légers et reproductibles. Cette page rassemble les commandes utiles pour installer Docker, administrer les conteneurs et maintenir les ressources locales.
 
@@ -9,7 +9,7 @@ Docker permet d’exécuter des applications dans des **conteneurs** légers et 
 | **Volume** | Espace persistant conservé hors du conteneur. |
 | **Réseau** | Couche de communication entre les conteneurs. |
 
-## Installation sur Rocky Linux
+## 💾 Installation sur Rocky Linux
 
 Docker CE est distribué depuis le dépôt Docker officiel. Les commandes suivantes installent le moteur, l’interface en ligne de commande et `containerd`, puis activent le service au démarrage.
 
@@ -20,7 +20,7 @@ sudo systemctl enable --now docker
 sudo systemctl status docker
 ```
 
-### Autoriser un utilisateur à utiliser Docker
+### 🛡️ Autoriser un utilisateur à utiliser Docker
 
 Par défaut, les commandes Docker nécessitent `sudo`. Ajoutez l’utilisateur voulu au groupe `docker`, puis ouvrez une nouvelle session pour que le changement soit pris en compte.
 
@@ -37,7 +37,7 @@ docker version
 docker run --rm hello-world
 ```
 
-## Conteneurs et Compose
+## 📦 Conteneurs et Compose
 
 Les conteneurs sont les processus gérés par Docker. `docker compose` permet de démarrer une application composée de plusieurs services à partir d’un fichier `compose.yaml`.
 
@@ -58,7 +58,7 @@ docker compose logs -f
 docker compose down
 ```
 
-## Réseaux
+## 🌐 Réseaux
 
 Un réseau personnalisé permet aux conteneurs d’un même projet de se joindre par leur nom, sans exposer tous leurs ports vers l’hôte.
 
@@ -73,7 +73,7 @@ docker network ls
 docker network inspect web
 ```
 
-## Images
+## 🖼️ Images
 
 Une image contient l’application et ses dépendances. Gardez des tags explicites afin de pouvoir revenir facilement à une version connue.
 
@@ -91,7 +91,7 @@ docker image ls moulti-stream
 docker build -f Dockerfile -t moulti-stream:0.0.9 .
 ```
 
-### Nettoyer les images inutilisées
+### 🔥 Nettoyer les images inutilisées
 
 Cette commande supprime les images non utilisées par un conteneur. Vérifiez d’abord que vous n’avez pas besoin de les conserver pour un retour arrière.
 
@@ -99,7 +99,7 @@ Cette commande supprime les images non utilisées par un conteneur. Vérifiez d�
 docker image prune -a -f
 ```
 
-## Volumes
+## 💽 Volumes
 
 Les volumes servent à conserver les données d’une application — par exemple une base de données — même après la suppression ou la recréation d’un conteneur.
 
@@ -114,7 +114,7 @@ docker volume ls -qf dangling=true
 docker volume prune
 ```
 
-## Aide rapide
+## 💡 Aide rapide
 
 Ajoutez `--help` à n’importe quelle commande pour afficher ses options, ou consultez l’état global du moteur avec :
 
