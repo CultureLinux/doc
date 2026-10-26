@@ -9,7 +9,7 @@
     pip3 install -r requirements.txt
 
 ## Preview
-    mkdocs serve
+    zensical serve
 
 ## Build
-    mkdocs build    
+    zensical build

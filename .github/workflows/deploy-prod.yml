@@ -40,4 +40,4 @@ jobs:
       - name: Install dependencies
         run: ssh production "cd '$DEPLOY_PATH' && . venv/bin/activate && pip install -r requirements.txt"
       - name: Rebuild site
-        run: ssh production "cd '$DEPLOY_PATH' && . venv/bin/activate && mkdocs build --clean --strict"
+        run: ssh production "cd '$DEPLOY_PATH' && . venv/bin/activate && zensical build --clean --strict"

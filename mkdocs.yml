@@ -1,14 +1,10 @@
 site_name: CultureLinux
 
-theme: 
-  name: material
+theme:
+  variant: modern
   language: fr
   palette:
     scheme: slate  
-  #features:
-  #  - navigation.tabs
-  #  - navigation.tabs.sticky
-  #  - navigation.indexes 
   features:
     - content.code.copy
 extra:
