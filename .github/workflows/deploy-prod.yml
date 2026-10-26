@@ -11,25 +11,28 @@ jobs:
     steps:
       - name: Configure SSH
         run: |
-          mkdir -p ~/.ssh/
-          echo "$SSH_KEY" > ~/.ssh/staging.key
+          test -n "$SSH_HOST" || { echo "SSH_HOST is not configured"; exit 1; }
+          test -n "$SSH_USER" || { echo "SSH_USER is not configured"; exit 1; }
+          test -n "$SSH_KEY" || { echo "SSH_PRIVATE_KEY is not configured"; exit 1; }
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/staging.key
           chmod 600 ~/.ssh/staging.key
-          cat >>~/.ssh/config <<END
+          cat > ~/.ssh/config <<END
           Host staging
             HostName $SSH_HOST
             User $SSH_USER
             IdentityFile ~/.ssh/staging.key
+            IdentitiesOnly yes
             StrictHostKeyChecking no
           END
         env:
           SSH_USER: ${{ secrets.SSH_USER }}
           SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           SSH_HOST: ${{ secrets.SSH_HOST }}
-#      - name: get id
-#        run: ssh staging 'id'        
-#      - name: get pwd
-#        run: ssh staging 'pwd'        
+      - name: Check SSH access
+        run: ssh -vvv -o BatchMode=yes -o ConnectTimeout=10 staging 'id'
       - name: pull new change 
         run: ssh staging 'cd doc && git pull'                
       - name: rebuild site 
-        run: ssh staging 'cd doc && rm -rf site && . venv/bin/activate ; mkdocs build'               
+        run: ssh staging 'cd doc && rm -rf site && . venv/bin/activate ; mkdocs build'
