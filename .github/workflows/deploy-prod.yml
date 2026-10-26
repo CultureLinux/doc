@@ -1,13 +1,16 @@
-name: Deploy_Prod
+name: Deploy Prod
+
 on:
   push:
     branches:
       - main
+
 jobs:
   deploy:
-    name: "Deploy to staging"
-    runs-on: ubuntu-latest
-    # needs: test
+    name: Deploy to production
+    runs-on: ubuntu-24.04
+    env:
+      DEPLOY_PATH: /home/hosting/clinuxdoc/doc
     steps:
       - name: Configure SSH
         run: |
@@ -31,8 +34,10 @@ jobs:
           SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           SSH_HOST: ${{ secrets.SSH_HOST }}
       - name: Check SSH access
-        run: ssh -vvv -o BatchMode=yes -o ConnectTimeout=10 staging 'id'
-      - name: pull new change 
-        run: ssh staging 'cd doc && git pull'                
-      - name: rebuild site 
-        run: ssh staging 'cd doc && rm -rf site && . venv/bin/activate ; mkdocs build'
+        run: ssh production "echo 'SSH OK' && test -d '$DEPLOY_PATH'"
+      - name: Pull new changes
+        run: ssh production "cd '$DEPLOY_PATH' && git pull --ff-only"
+      - name: Install dependencies
+        run: ssh production "cd '$DEPLOY_PATH' && . venv/bin/activate && pip install -r requirements.txt"
+      - name: Rebuild site
+        run: ssh production "cd '$DEPLOY_PATH' && . venv/bin/activate && mkdocs build --clean --strict"
