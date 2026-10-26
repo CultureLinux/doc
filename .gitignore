@@ -2,3 +2,4 @@
 /site
 .envrc
 .agents
+.cache
