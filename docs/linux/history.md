@@ -1,93 +1,136 @@
-#  Historique 📜
-Cette section fournit un aperçu des commandes et configurations liées à l'historique des commandes dans un shell Unix/Linux. 💻
+# Historique 📜
 
-## Afficher 👀
-Cette sous-section explique comment afficher et rechercher dans l'historique des commandes. 🔍
+Cette section présente les commandes et réglages de l'historique Bash. L'historique contient souvent des informations sensibles : évitez d'y saisir des mots de passe, jetons ou clés privées. 💻
 
+## Afficher et rechercher 👀
 
-### Lister 📋
-Affiche toutes les commandes exécutées précédemment.
+Cette sous-section explique comment consulter et retrouver une commande précédente. 🔍
+
+### Lister les commandes 📋
+Affiche les commandes conservées dans l'historique de la session courante.
 ```sh
 $ history
 ```
 
-### rechercher tout 🔎
-Explique comment rechercher des commandes spécifiques dans l'historique à l'aide de grep et de raccourcis.
+### Rechercher du texte 🔎
+Filtre l'historique par mot-clé, sans distinguer majuscules et minuscules.
 ```sh
-$ history | grep sudo
-$ !sudo:p 
+$ history | grep -i -- sudo
+```
+
+### Prévisualiser une commande 🪞
+` :p` affiche la commande trouvée sans l'exécuter.
+```sh
+$ !sudo:p
 $ !18:p
 ```
 
-### Recherche interactive 🕵️‍♂️
-Décrit comment utiliser la recherche interactive pour trouver des commandes dans l'historique. 
-```sh
-Ctrl + R  
+### Recherche interactive 🕵️
+Appuyez sur `Ctrl` + `R`, saisissez une partie de la commande, puis appuyez de nouveau sur `Ctrl` + `R` pour parcourir les résultats. Appuyez sur `Entrée` pour l'exécuter ou sur les flèches pour la modifier.
+```text
+Ctrl + R
 ```
 
-## Action ⚙️
-Cette sous-section couvre les actions pouvant être effectuées sur l'historique des commandes. 🔧
+## Réutiliser une commande ⚙️
 
-### Exécuter ▶️
-Montre comment réexécuter des commandes spécifiques de l'historique.
+Cette sous-section couvre la réexécution et l'édition de commandes précédentes. 🔧
+
+### Exécuter la dernière commande correspondante ▶️
+Exécute la dernière commande qui commence par `sudo`.
 ```sh
 $ !sudo
+```
+
+### Exécuter une commande par numéro 🔢
+Exécute l'entrée d'historique portant le numéro indiqué.
+```sh
 $ !18
 ```
 
-### Nettoyer l'historique 🧹
-Explique comment effacer l'historique des commandes.
+### Répéter la dernière commande 🔁
 ```sh
-$ history -cw
-$ > ~/.bash_history
+$ !!
 ```
 
-## Config ⚙️
-Cette sous-section détaille les configurations possibles pour l'historique des commandes. 🛠️
+### Éditer avant d'exécuter ✍️
+Ouvre l'entrée dans l'éditeur défini par `FCEDIT` ou `EDITOR`, puis l'exécute après enregistrement.
+```sh
+$ fc 18
+```
+
+## Nettoyer l'historique 🧹
+
+Cette sous-section permet d'effacer l'historique courant et son fichier persistant.
+
+### Vider complètement l'historique ⚠️
+Efface l'historique de la session, puis écrit cet historique vide dans le fichier `~/.bash_history`.
+```sh
+$ history -c
+$ history -w
+```
+
+### Retirer une seule entrée 🗑️
+Supprime l'entrée ciblée de la session courante. Utilisez ensuite `history -w` pour enregistrer le changement dans le fichier.
+```sh
+$ history -d 18
+$ history -w
+```
+
+## Configurer Bash ⚙️
+
+Ajoutez les réglages suivants dans `~/.bashrc`, puis rechargez le fichier avec `source ~/.bashrc`. 🛠️
 
 ### Ajouter un horodatage ⏰
-Indique comment ajouter un horodatage à chaque commande dans l'historique.
+Affiche la date et l'heure devant chaque entrée de `history`.
+```bash
+export HISTTIMEFORMAT='%F %T '
+```
+
+### Augmenter la taille de l'historique 🔝
+`HISTSIZE` limite le nombre d'entrées conservées en mémoire ; `HISTFILESIZE` limite celles conservées dans le fichier.
+```bash
+HISTSIZE=10000
+HISTFILESIZE=10000
+```
+
+### Partager l'historique entre les terminaux 📝
+Ajoute les nouvelles commandes au fichier après chaque invite et lit celles ajoutées par les autres sessions Bash.
+```bash
+PROMPT_COMMAND='history -a; history -n'
+```
+
+### Ignorer certains doublons 🚫
+Ne conserve pas les commandes précédées d'un espace et supprime les doublons antérieurs.
+```bash
+HISTCONTROL='ignoreboth:erasedups'
+```
+
+Pour ne pas enregistrer ponctuellement une commande, commencez-la par un espace. Cette règle n'est active que si `ignorespace` ou `ignoreboth` est configuré.
+
+### Recharger la configuration 🔄
 ```sh
-$ echo "export HISTTIMEFORMAT='%F, %T '" >> ~/.bashrc
 $ source ~/.bashrc
 ```
 
-### Augmenter la longueur de l'historique (par défaut 1000) 🔝
-Explique comment augmenter la longueur par défaut de l'historique des commandes.
-```sh
-$ echo "HISTSIZE=10000" >> ~/.bashrc
-$ echo "HISTFILESIZE=10000" >> ~/.bashrc    
-$ source ~/.bashrc
+## Raccourcis utiles 🧰
+
+Cette sous-section ajoute des raccourcis facultatifs à `~/.bashrc`.
+
+### Alias court 📌
+Ajoute l'alias `h` pour afficher l'historique.
+```bash
+alias h='history'
 ```
 
-### Écriture directe dans l'historique 📝
-Montre comment configurer l'écriture directe des commandes dans le fichier d'historique.
-```sh
-$ echo "PROMPT_COMMAND='history -a'" >> ~/.bashrc   
-$ source ~/.bashrc
+### Fonction de recherche 🔎
+Ajoute une fonction `hg` qui recherche un terme dans l'historique.
+```bash
+hg() {
+    history | grep -i -- "$1"
+}
 ```
 
-### NE PAS écrire dans l'historique 📝
-Montre comment configurer l'écriture directe des commandes dans le fichier d'historique.
+Utilisation :
 ```sh
-$ echo "HISTCONTROL='ignoreboth:erasedups'" >> ~/.bashrc   
-$ source ~/.bashrc
-```
-
-## Aide ⚙️
-
-### Alias court
-Ajoute l'alias `h` pour appeler `history`
-```sh
-$ echo "alias h='history'" >> ~/.bashrc   
-$ source ~/.bashrc
-```
-
-### Recherche courte 
-Ajoute la fonction `hg` pour rechercher dans l'historique
-```sh
-$ echo "function hg (){
-    history | grep $^1
-}" >> ~/.bashrc   
-$ source ~/.bashrc
+$ hg sudo
 ```
