@@ -28,6 +28,7 @@ nav:
     - 'Environement' : linux/environnement.md
     - 'Historique' : linux/history.md
     - 'Stockage' : linux/storage.md  
+    - 'Réseau' : linux/network.md
     - 'Utilisateurs' : linux/users.md    
     - 'Sudoers' : linux/sudoers.md            
     - 'Permissions' : linux/permissions.md     

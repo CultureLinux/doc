@@ -1,117 +1,166 @@
 # Utilisateurs 😊
 
-## Utilisateurs réguliers 🤖️ 
+Cette section rassemble les commandes courantes pour consulter, créer et administrer les comptes utilisateurs sous Linux. 👤
 
-### Obtenir l'identifiant de l'utilisateur actuel 📝
-    $ id
-    uid=1000(clinux) gid=1000(clinux) groups=1000(clinux)
+## Utilisateur courant 👀
 
-### Obtenir les utilisateurs connectés 💻️
-    who
+Cette sous-section permet d'identifier l'utilisateur connecté et de gérer son mot de passe. 🔍
 
-### Mise a zéro du cache de compteur d'utilisateurs
-    tee /var/run/utmp < /dev/null
+### Afficher l'identité 🪪
+Affiche l'identifiant, le groupe principal et les groupes secondaires de l'utilisateur courant.
+```sh
+$ id
+```
 
-### Changer le mot de passe 🔑️
-    $ passwd
-    Changing password for user clinux.
-    Current password:
-    New password:
-    Retype new password:
-    passwd: all authentication tokens updated successfully.
+### Voir les utilisateurs connectés 💻
+Liste les utilisateurs actuellement connectés au système.
+```sh
+$ who
+```
 
-### Obtenir l'âge du mot de passe 📅️
-    $ chage -l clinux
-    Last password change                                    : Sep 30, 2023
-    Password expires                                        : never
-    Password inactive                                       : never
-    Account expires                                         : never
-    Minimum number of days between password change          : 0
-    Maximum number of days between password change          : 99999
-    Number of days of warning before password expires       : 7
+### Changer son mot de passe 🔑
+Demande le mot de passe actuel puis le nouveau mot de passe.
+```sh
+$ passwd
+```
 
-## Administration des utilisateurs 🛠️ 
+### Consulter l'âge du mot de passe 📅
+Affiche les dates et règles d'expiration du mot de passe d'un utilisateur.
+```sh
+$ chage -l alice
+```
 
-### Durcissement 🛡️ 
+## Administration ⚙️
 
-#### /etc/login.defs 🔐
+Cette sous-section couvre la gestion des comptes par un administrateur. Les commandes suivantes nécessitent généralement les droits `root`. 🛠️
 
-* Changer le UMASK d'orgine dans /etc/login(022) à 077 pour eviter le partage des fichiers entre les utilisateurs.
+### Créer un utilisateur ➕
+Crée le compte `alice`, son répertoire personnel et définit Bash comme shell de connexion.
+```sh
+# useradd -m -s /bin/bash -d /home/alice alice
+```
 
-### Créer un nouvel utilisateur 🤖
+Options utiles de `useradd` :
 
-    # useradd -m -s /bin/bash -d /home/alice alice
-* -m : créer le répertoire personnel du nouvel utilisateur
-* -s : définir l'interpréteur de commandes par défaut (shell) pour le nouvel utilisateur
-* -d : définir le chemin du répertoire personnel du nouvel utilisateur
-* -g : définir le groupe principal du nouvel utilisateur
-* -G : définir les groupes supplémentaires du nouvel utilisateur (group1,group2)
-* -c : définir la description du nouvel utilisateur
-* -e : définir la date d'expiration du mot de passe (YYYY-MM-DD)
+- `-m` : crée le répertoire personnel.
+- `-s` : définit le shell de connexion.
+- `-d` : définit le chemin du répertoire personnel.
+- `-g` : définit le groupe principal.
+- `-G` : définit les groupes secondaires, séparés par des virgules.
+- `-c` : ajoute une description au compte.
+- `-e` : définit la date d'expiration du compte (`YYYY-MM-DD`).
 
-### Changer l'age du mot de passe 🔐
+### Voir un utilisateur 🔎
+Affiche l'identifiant et les groupes d'un utilisateur précis.
+```sh
+# id alice
+```
 
-    # chage -I -1 -m 1 -M 90 -E -1 -d $(date '+%F') clinux
-* -I : jour avant le blocage du compte
-* -I : day before account is locked
-* -m : minimal duration before password can be changed
-* -M : maximum duration of valid password
-* -E : date of password expiration (days from timestamp init)
-* -d : date of password changing
+### Ajouter aux groupes 👥
+Ajoute `alice` aux groupes indiqués, sans retirer ses groupes secondaires existants.
+```sh
+# usermod -aG group1,group2 alice
+```
 
-### Voir un utilisateur spécifique 📦
-    # id alice
+### Remplacer les groupes 🔁
+Remplace la liste des groupes secondaires de l'utilisateur. Une liste vide retire tous ses groupes secondaires.
+```sh
+# usermod -G group2 alice
+# usermod -G '' alice
+```
 
-### Ajouter un utilisateur aux groupes 🌍
-    # usermod –aG group1,group2 alice
+### Modifier l'expiration du mot de passe ⏳
+Impose un délai minimal d'un jour et une validité maximale de 90 jours pour le mot de passe.
+```sh
+# chage -I -1 -m 1 -M 90 -E -1 -d "$(date '+%F')" alice
+```
 
-### Supprimer un utilisateur des groupes 🌐
-    # usermod –G group2 alice
-    # usermod –G '' alice
+- `-I` : nombre de jours d'inactivité avant verrouillage ; `-1` désactive cette règle.
+- `-m` : nombre minimal de jours entre deux changements.
+- `-M` : nombre maximal de jours de validité.
+- `-E` : date d'expiration du compte ; `-1` désactive cette règle.
+- `-d` : date du dernier changement de mot de passe.
 
-### Supprimer un utilisateur du système 💣
-    # userdel -r clinux
-* -r : supprime le répertoire de l'utilisateur (par défaut /home/username)
-* -Z : supprime le contexte SELinux pour le compte d'utilisateur
-* -f : force la suppression sans demander confirmation et même si l'utilisateur est connecté sur le système 💥
+### Supprimer un utilisateur 🗑️
+Supprime le compte et, avec `-r`, son répertoire personnel et sa boîte aux lettres.
+```sh
+# userdel -r alice
+```
 
-## SU (Switch User) 🔄
+Options utiles :
 
-### su - 🚀 
-On demande l'acces au shell de root (en donnant le mot de passe root)
-    su - 
+- `-r` : supprime le répertoire personnel et la boîte aux lettres.
+- `-Z` : supprime le mappage SELinux du compte, si applicable.
+- `-f` : force la suppression ; à utiliser avec prudence.
 
-### Changer d'utilisateur 🤖
-    su -l alice 
-    su - alice
+## Durcissement 🛡️
 
-### Lancer une commande en tant qu'un autre utilisateur 🎮
-    su -l alice -c "id && pwd"
+Cette sous-section présente un réglage global des permissions créées pour les nouveaux fichiers.
+
+### Configurer l'UMASK 🔐
+Dans `/etc/login.defs`, adaptez la valeur `UMASK`. Une valeur de `077` évite par défaut l'accès des autres utilisateurs aux nouveaux fichiers et répertoires.
+```conf
+UMASK 077
+```
+
+## Changer d'utilisateur 🔄
+
+Cette sous-section explique l'utilisation de `su` pour ouvrir une session ou exécuter une commande sous un autre compte.
+
+### Ouvrir une session root 🚀
+Ouvre un shell de connexion `root` et demande le mot de passe de `root`.
+```sh
+$ su -
+```
+
+### Ouvrir une session utilisateur 👤
+Ouvre une session de connexion pour `alice` avec son environnement habituel.
+```sh
+$ su - alice
+```
+
+### Exécuter une commande 🎮
+Exécute une commande sous l'identité de `alice` sans ouvrir de shell interactif.
+```sh
+$ su -l alice -c "id && pwd"
+```
 
 ## Sudoers 📦
 
-Gerer finement (ou pas) des droits supplementaires sur le systeme.
+Cette sous-section introduit la délégation de privilèges avec `sudo`. Pour une configuration complète, consultez aussi [`sudoers.md`](sudoers.md). ⚠️
 
-### Editeur
-⚠️ Attention, la modification des droits sudoers doit se faire avec precaution. Le fichier `/etc/sudoers` est très sensible et peut causer des problèmes si modifié incorrectement.
-L'edition des droits sudoers se fait avec `visudo` qui permet de vérifier les droits avant de les modifier.
+### Éditer la configuration ✍️
+Utilisez toujours `visudo` : il vérifie la syntaxe avant d'enregistrer `/etc/sudoers`.
+```sh
+# visudo
+```
 
-    # visudo
+### Autoriser sans mot de passe 🔓
+Autorise `alice` à exécuter toute commande en tant que n'importe quel utilisateur, sans mot de passe.
+```sudoers
+alice ALL=(ALL) NOPASSWD: ALL
+```
 
-### Syntaxe
+### Limiter à une commande 🎯
+Autorise uniquement la commande indiquée.
+```sudoers
+alice ALL=(ALL) NOPASSWD: /usr/bin/dnf update
+```
 
-#### Possibilite de devenir root sans mot de passe
-    alice ALL=(ALL) NOPASSWD: ALL
+### Autoriser un groupe 👥
+Autorise les membres du groupe `alice` à installer des paquets avec `dnf` sans mot de passe.
+```sudoers
+%alice ALL=(ALL) NOPASSWD: /usr/bin/dnf install *
+```
 
-#### Autoriser uniquement une commande avec un certain argument pour un utilisateur spécifique
-    alice ALL=(ALL) NOPASSWD: /usr/bin/dnf update
+### Exécuter en tant qu'un autre utilisateur 🔀
+Autorise `alice` à exécuter le script sous l'identité de `bob`.
+```sudoers
+alice ALL=(bob) NOPASSWD: /home/bob/script.sh
+```
 
-#### Autoriser un groupe à exécuter une commande sans mot de passe
-    %alice ALL=(ALL) NOPASSWD: /usr/bin/dnf install *
-
-#### Autoriser une commande en tant qu'un autre utilisateur
-    alice ALL=(bob) NOPASSWD: /home/bob/script.sh
-
-#### Verification les droits sudoers
-    su - alice
-    sudo -l
+### Vérifier les droits ✅
+Affiche les commandes `sudo` autorisées pour l'utilisateur.
+```sh
+$ sudo -l -U alice
+```
